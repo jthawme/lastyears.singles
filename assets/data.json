@@ -1,0 +1,266 @@
+[
+  {
+    "id": 2,
+    "youtube_link": "https://www.youtube.com/watch?v=3EyDeCvQ8vA",
+    "title": "dominique",
+    "artists": ["Ela Minus"],
+    "spotify_id": "4RYeyNZ7ZlMJqVhoJTvMgp",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 100
+      },
+      {
+        "source": "npr",
+        "position": 99
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "youtube_link": "https://www.youtube.com/watch?v=Nhf7_oXnIZU&feature=youtu.be",
+    "title": "I Walk Alone with Acid",
+    "artists": ["Pale Blue"],
+    "spotify_id": "3xZKh6iptQN2xvZNNihxOW",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 99
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "youtube_link": "https://www.youtube.com/watch?v=Nhf7_oXnIZU&feature=youtu.be",
+    "title": "Dobby",
+    "artists": ["1010 Benja SL"],
+    "spotify_id": "6NkswOEtMqWd4wOa5Szzfq",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 99
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "youtube_link": "https://www.youtube.com/watch?v=ZzlWca_KMRY",
+    "title": "Horrible Person",
+    "artists": ["Caitlin Pasko"],
+    "spotify_id": "4mtfqafTxGj9YxQxsQt4yB",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 97
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "youtube_link": "https://www.youtube.com/watch?v=oOXho8yVaKk&feature=youtu.be",
+    "title": "Acid",
+    "artists": ["Jockstrap"],
+    "spotify_id": "6QWz6ZtKAqp6Aqh0QIG6K6",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 96
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "youtube_link": "https://www.youtube.com/watch?v=rGd9wKo1ZFs&feature=youtu.be",
+    "title": "Hula",
+    "artists": ["Bullion"],
+    "spotify_id": "5SePTXjCyk17d3VA70ISg7",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 95
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "youtube_link": "https://www.youtube.com/watch?v=WrpBgN_iUnA&feature=youtu.be",
+    "title": "Caution",
+    "artists": ["The Killers"],
+    "spotify_id": "111HOSfnPX1mCxwwb49BCY",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 94
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "youtube_link": "https://www.youtube.com/watch?v=83xBPCw5hh4",
+    "title": "ROCKSTAR (feat. Roddy Ricch)",
+    "artists": ["DaBaby", "Roddy Ricch"],
+    "spotify_id": "7ytR5pFWmSjzHJIeQkgog4",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 93
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "youtube_link": "https://www.youtube.com/watch?v=uIjU0do0PqU&feature=youtu.be",
+    "title": "Hannah Sun",
+    "artists": ["Lomelda"],
+    "spotify_id": "4neuBR5NvjaYqAfj2vPbig",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 92
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "youtube_link": "https://www.youtube.com/watch?v=pNNf4I1dc_U&feature=youtu.be",
+    "title": "WAKING UP DOWN",
+    "artists": ["Yaeji"],
+    "spotify_id": "0YnbUCbW8viWWikWXoVzB1",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 91
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "youtube_link": "https://www.youtube.com/watch?v=E0b-u69xdws",
+    "title": "Echos",
+    "artists": ["Beatriz Ferreyra"],
+    "spotify_id": "1zhIvWLjJ1PaCTd2JyZUz7",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 90
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "youtube_link": "https://www.youtube.com/watch?v=9FpkHjJTrZY",
+    "title": "Care",
+    "artists": ["beabadoobee"],
+    "spotify_id": "1aTf6n7MSd9z1LQYJEcmqF",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 89
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "youtube_link": "https://www.youtube.com/watch?v=5dw5FWNmCi4&feature=youtu.be",
+    "title": "Hate The Club (feat. Masego)",
+    "artists": ["Kehlani", "Masego"],
+    "spotify_id": "0QUbiLQySWPq5Lh3f7A9bN",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 88
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "youtube_link": "https://www.youtube.com/watch?v=4TWCxqaUono",
+    "title": "ADMSDP",
+    "artists": ["DJ Python", "LA Warman"],
+    "spotify_id": "0NutKF5uD3K8qLmCBNg2ka",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 87
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "youtube_link": "https://www.youtube.com/watch?v=gs-MtItyOFc&feature=youtu.be",
+    "title": "Breathe Deeper",
+    "artists": ["Tame Impala"],
+    "spotify_id": "3LbZIhU0smEU5SUnxod4j4",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 86
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "youtube_link": "https://www.youtube.com/watch?v=2MxT6PePWZQ",
+    "title": "Don Dada",
+    "artists": ["Cakes da Killa", "Proper Villains"],
+    "spotify_id": "6B3NBWtTa7WuPILwpAz6D5",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 85
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "youtube_link": "https://www.youtube.com/watch?v=RuhvdaDabpU",
+    "title": "IPHONE",
+    "artists": ["Rico Nasty"],
+    "spotify_id": "2dMvqE5MHPH7Ksd5pQqFmL",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 84
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "youtube_link": "https://www.youtube.com/watch?v=Mk5YrI7EoUw",
+    "title": "Suite Pour L'invisible",
+    "artists": ["Ana Roxanne"],
+    "spotify_id": "5JTRbD6x9nnYh3mrrK3kcR",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 83
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "youtube_link": "https://www.youtube.com/watch?v=pAS1o5xtZJs",
+    "title": "Furies",
+    "artists": ["Moor Mother", "billy woods"],
+    "spotify_id": "0rs9vtwOjJUoAexxmfTLtx",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 82
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "youtube_link": "https://www.youtube.com/watch?v=L-JaWgRu8sY",
+    "title": "River Dreams",
+    "artists": ["Beverly Glenn-Copeland"],
+    "spotify_id": "4bnbhD2ipp5YyfifeHwh5D",
+    "positions": [
+      {
+        "source": "pitchfork",
+        "position": 81
+      }
+    ]
+  }
+]

@@ -1,0 +1,159 @@
+<template>
+  <Canvas ref="canvas" @mounted="onMount" @resize="onResize" />
+</template>
+
+<script>
+import { deg2rad, mapRange } from "~/assets/js/utils";
+import * as THREE from "three";
+import { MainEngine } from "~/assets/js/engine";
+import Canvas from "../common/Canvas.vue";
+import anime from "animejs";
+// import { makeNoise2D } from "fast-simplex-noise";
+// import { onWindowResize, tickUpdate } from "../assets/js/utils";
+
+const AMT = 5;
+
+const getPlane = (w, h, color = 0xff0000) => {
+  const geo = new THREE.PlaneGeometry(w, h);
+  const mat = new THREE.MeshBasicMaterial({
+    color,
+    side: THREE.DoubleSide,
+    depthTest: false,
+  });
+
+  const mesh = new THREE.Mesh(geo, mat);
+  // mesh.add(getPlaneEdges(mesh));
+
+  return mesh;
+};
+
+const getPlaneGroup = (w, h, stroke = 4) => {
+  const plane1 = getPlane(w, h, 0x000000);
+  const plane2 = getPlane(w - stroke * 2, h - stroke * 2, 0x272727);
+  plane2.position.z += 0.1;
+
+  const g = new THREE.Group();
+  g.add(plane1);
+  g.add(plane2);
+
+  return g;
+};
+
+export default {
+  components: { Canvas },
+  mounted() {
+    if (!this.unlisten) {
+      this.unlisten = [];
+    }
+  },
+  computed: {
+    canvas() {
+      return this.$refs.canvas.canvas;
+    },
+    ctx() {
+      return this.$refs.canvas.ctx;
+    },
+    width() {
+      return this.$refs.canvas.width;
+    },
+    height() {
+      return this.$refs.canvas.height;
+    },
+    playing() {
+      return this.$store.state.player.playing;
+    },
+  },
+  beforeDestroy() {
+    this.unlisten && this.unlisten.forEach((cb) => cb());
+    this.engine.destroy();
+  },
+  watch: {
+    playing(newVal) {
+      if (!this.animation) {
+        return;
+      }
+
+      if (newVal) {
+        this.animation.play();
+      } else {
+        this.animation.pause();
+      }
+    },
+  },
+  methods: {
+    onMount() {
+      if (!this.unlisten) {
+        this.unlisten = [];
+      }
+
+      this.engine = new MainEngine();
+      this.engine.setup(this.canvas, this.width, this.height);
+
+      const planes = new Array(AMT).fill(0).map(() => getPlaneGroup(300, 300));
+      const group = new THREE.Group();
+
+      const range = (AMT - 1) * 50;
+      const staggerArray = [];
+      const positionArray = [];
+      planes.forEach((p, i) => {
+        const r = mapRange(i, AMT, 0, -range, range);
+        p.position.z = r;
+        p.position.y = r * 0.25;
+
+        staggerArray.push(p.rotation);
+        positionArray.push(p.position);
+
+        if (p !== 0) {
+          p.renderOrder = i;
+          group.add(p);
+        }
+      });
+      planes[0].renderOrder = 100;
+      group.add(planes[0]);
+
+      group.rotateY(deg2rad(-25));
+      // group.rotateX(deg2rad(-5));
+      this.engine.move(group, 0.5, 0.5);
+      this.group = group;
+
+      this.engine.addObject(group);
+
+      this.animation = anime({
+        targets: staggerArray,
+        z: deg2rad(90),
+        delay: anime.stagger(250, { start: 1000 }),
+        loop: true,
+        duration: 2000,
+        easing: "easeInOutQuart",
+      });
+
+      this.engine.start();
+    },
+    onResize() {
+      if (this.engine) {
+        this.engine.resize(this.width, this.height);
+        this.engine.move(this.group, 0.5, 0.5);
+      }
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.outer {
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  width: 100%;
+  height: 100%;
+
+  transform: translate3d(-50%, -50%, 0);
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+}
+</style>

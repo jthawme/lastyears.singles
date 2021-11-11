@@ -1,0 +1,122 @@
+<template>
+  <div ref="player" />
+</template>
+
+<script>
+import { timer } from "~/assets/js/utils";
+
+const getYoutube = () => {
+  return new Promise((resolve) => {
+    import("youtube-iframe").then(({ default: YouTubeIframeLoader }) =>
+      YouTubeIframeLoader.load((yt) => resolve(yt))
+    );
+  });
+};
+
+export default {
+  props: {
+    videoId: {
+      type: String,
+      default: undefined,
+    },
+  },
+  async mounted() {
+    this.YT = await getYoutube();
+
+    if (this.videoId) {
+      this.loadOrCreate();
+    }
+  },
+  data() {
+    return {
+      ready: false,
+    };
+  },
+  watch: {
+    videoId(val) {
+      this.loadOrCreate();
+    },
+  },
+  methods: {
+    updateTime() {
+      clearTimeout(this.timeUpdateId);
+      this.$emit(
+        "timechange",
+        this.player.getCurrentTime() / this.player.getDuration()
+      );
+
+      this.timeUpdateId = setTimeout(() => this.updateTime(), 500);
+    },
+    onPlayerReady() {
+      this.ready = true;
+    },
+    onPlayerStateChange(event) {
+      clearTimeout(this.timeUpdateId);
+
+      if (event.data == this.YT.PlayerState.PLAYING) {
+        this.updateTime();
+
+        this.$emit("playing");
+      }
+
+      if (event.data == this.YT.PlayerState.PAUSED) {
+        this.$emit("pause");
+      }
+      if (event.data == this.YT.PlayerState.ENDED) {
+        this.$emit("end");
+      }
+    },
+    onPlayerError(event) {
+      if (event.data === 101 || event.data === 150) {
+        this.$emit("unable");
+      } else {
+        this.$emit("error", event.data);
+      }
+    },
+    loadOrCreate() {
+      if (!this.player) {
+        this.player = new this.YT.Player(this.$el, {
+          height: "390",
+          width: "640",
+          videoId: this.videoId,
+          playerVars: {
+            modestbranding: 0,
+            rel: 0,
+            showinfo: 0,
+            disablekb: 1,
+            playsinline: 1,
+            autoplay: 1,
+          },
+          events: {
+            onReady: this.onPlayerReady,
+            onStateChange: this.onPlayerStateChange,
+            onError: this.onPlayerError,
+          },
+        });
+      } else {
+        this.player.loadVideoById(this.videoId);
+      }
+    },
+    ensureLoaded() {
+      return new Promise((resolve, reject) => {
+        const check = (times) => {
+          if (times > 10) {
+            reject("Error loading youtube api");
+            return;
+          }
+
+          if (!this.ready) {
+            timer(100).then(() => check(times + 1));
+          } else {
+            resolve();
+          }
+        };
+        check(0);
+      });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+</style>

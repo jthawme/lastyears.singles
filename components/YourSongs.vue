@@ -1,0 +1,59 @@
+<template>
+  <div class="outer">
+    <h2>Your Songs</h2>
+
+    <div class="pool">
+      <song
+        v-for="song in songs"
+        :key="song.id"
+        v-bind="song"
+        @click.native="() => playSong(song)"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import Song from "./common/Song.vue";
+// import { SONGS } from "~/assets/js/songs.js";
+import SONGS from "~/static/pitchfork.json";
+
+export default {
+  components: { Song },
+  computed: {
+    songs() {
+      return SONGS;
+    },
+  },
+  methods: {
+    playSong(item) {
+      this.$store.commit("player/toggleShouldPlay", true);
+      this.$store.commit("queue/createQueue", {
+        items: this.songs,
+        source: "your-songs",
+        position: this.songs.findIndex((i) => i.id === item.id),
+      });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.outer {
+  // margin-top: 4em;
+
+  h2 {
+    margin: 4em 0;
+
+    font-size: var(--font-size-normal);
+  }
+}
+
+.pool {
+  display: grid;
+
+  // grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+</style>

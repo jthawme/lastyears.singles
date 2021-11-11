@@ -1,0 +1,54 @@
+@mixin small-mobile() {
+  @media screen and (min-width: $small-mobile-breakpoint) {
+    @content;
+  }
+}
+
+@mixin large-mobile() {
+  @media screen and (min-width: $large-mobile-breakpoint) {
+    @content;
+  }
+}
+
+@mixin tablet() {
+  @media screen and (min-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop() {
+  @media screen and (min-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin widescreen() {
+  @media screen and (min-width: $widescreen-breakpoint) {
+    @content;
+  }
+}
+
+@mixin fullhd() {
+  @media screen and (min-width: $fullhd-breakpoint) {
+    @content;
+  }
+}
+
+@mixin between($first, $last) {
+
+  @media screen and (min-width: $first) and (max-width: $last - 1px) {
+    @content;
+  }
+}
+
+@function vh($quantity) {
+  @return calc(var(--vh, 1vh) * #{$quantity});
+}
+
+@mixin webp($path) {
+  background-image: url($path + '.png');
+
+  .webp & {
+    background-image: url($path + '.webp');
+  }
+}
