@@ -97,6 +97,15 @@ export default {
     },
   },
   watch: {
+    position(val) {
+      const item = this.queue[val];
+      this.$store.commit("player/setSongDetails", {
+        id: item.id,
+        title: item.title,
+        artists: item.artists,
+        spotify_id: item.spotify_id,
+      });
+    },
     videoId() {
       this.play();
     },

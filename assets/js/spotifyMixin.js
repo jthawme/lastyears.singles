@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import queryString from "query-string";
+import { PLAYER_CONTROL } from "~/store/player";
 import { ACCESS_TOKEN_KEY, STATE_KEY } from "./constants";
 import { getSpotify, getSpotifyAuthoriseUrl } from "./spotify";
 
@@ -22,14 +23,22 @@ export const SpotifyMixin = {
     };
   },
   methods: {
+    /**
+     * Method that grabs anything after spotify is successful
+     */
     async setupSpotify() {
       const profile = await this.spotify.getMe();
 
-      this.$store.commit(
-        "spotify/setCanUseSpotify",
-        profile.product === "premium"
-      );
+      if (profile.product === "premium") {
+        this.$store.commit("player/setPlayerControl", PLAYER_CONTROL.SPOTIFY);
+      }
     },
+
+    /**
+     * Grabs any previous token and tries to initiate it
+     *
+     * @returns {Promise<boolean>}
+     */
     getPreviousToken() {
       const prevToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
@@ -48,6 +57,12 @@ export const SpotifyMixin = {
 
       return Promise.resolve(false);
     },
+
+    /**
+     * Checks to see if this is a callback state and grabs the info from the page
+     *
+     * @returns {Promise<boolean>}
+     */
     getCurrentToken() {
       if (window.location.hash) {
         const { state, access_token, expires_in } = queryString.parse(
@@ -74,9 +89,20 @@ export const SpotifyMixin = {
 
       return Promise.resolve(false);
     },
+
+    /**
+     * Initiates the spotify object and attaches it to vuex
+     *
+     * @param {string} token
+     * @param {number} expires
+     */
     setToken(token, expires) {
       this.$store.commit("spotify/setObject", getSpotify(token, expires));
     },
+
+    /**
+     * If not logged in setup the scene to allow for the authorisation URL
+     */
     setupAuthorise() {
       localStorage.setItem(STATE_KEY, this.stateToken);
       this.$store.commit(
@@ -86,20 +112,6 @@ export const SpotifyMixin = {
     },
   },
   computed: {
-    queueSource() {
-      return this.$store.state.queue.source;
-    },
-    queue() {
-      return this.$store.state.queue.items;
-    },
-    queueUris() {
-      return this.queue.map((item) => item.spotify_id);
-    },
-    currentSong() {
-      return this.$store.state.queue.items.length
-        ? this.$store.state.queue.items[this.$store.state.queue.position]
-        : false;
-    },
     spotify() {
       return this.$store.state.spotify.object;
     },

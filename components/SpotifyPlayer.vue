@@ -10,6 +10,9 @@ export default {
       currentlyPlaying: null,
     };
   },
+  mounted() {
+    this.getCurrent();
+  },
   methods: {
     onTime(percentage) {
       this.$store.commit("player/setPlayerPercentage", percentage);
@@ -23,7 +26,8 @@ export default {
     async getDeviceId() {
       if (!this.deviceId) {
         const { devices } = await this.spotify.getMyDevices();
-        this.deviceId = devices[0].id;
+        const activeDevice = devices.find((d) => d.is_active);
+        this.deviceId = activeDevice ? activeDevice.id : devices[0].id;
       }
 
       return this.deviceId;
@@ -52,6 +56,7 @@ export default {
           position: this.queueUris.findIndex((uri) => song.spotify_id === uri),
         },
       });
+      this.getCurrent();
     },
     async play() {
       await this.spotify.play();
@@ -62,14 +67,25 @@ export default {
     },
     async getCurrent() {
       clearTimeout(this.updateTimer);
-      const { is_playing, item, progress_ms, context, ...rest } =
+      const { is_playing, item, progress_ms, context } =
         await this.spotify.getMyCurrentPlaybackState();
 
+      if (!context || context.uri !== this.playlistUri) {
+        this.$store.commit("queue/resetQueue");
+      }
+
       this.currentlyPlaying = item.id;
-      this.$store.commit(
-        "queue/setQueuePosition",
-        this.queue.findIndex((row) => row.spotify_id === item.id)
+      const playingIndex = this.queue.findIndex(
+        (row) => row.spotify_id === item.id
       );
+      this.$store.commit("queue/setQueuePosition", playingIndex);
+
+      this.$store.commit("player/setSongDetails", {
+        id: this.songs.find((row) => row.spotify_id === item.id)?.id || -1,
+        title: item.name,
+        artists: item.artists.map((a) => a.name),
+        spotify_id: item.id,
+      });
 
       this.$store.commit("player/togglePlay", is_playing);
       this.$store.commit("player/toggleShouldPlay", is_playing);
@@ -79,7 +95,7 @@ export default {
       );
 
       if (is_playing) {
-        this.updateTimer = setTimeout(() => this.getCurrent(), 2500);
+        this.updateTimer = setTimeout(() => this.getCurrent(), 10000);
       }
     },
   },
@@ -90,11 +106,16 @@ export default {
     playlistUri() {
       return PLAYLISTS[this.source] || false;
     },
+
     shouldPlay() {
       return this.$store.state.player.shouldPlay;
     },
-    queue() {
-      return this.$store.state.queue.items;
+    playing() {
+      return this.$store.state.player.playing;
+    },
+
+    songs() {
+      return this.$store.state.liked.songs;
     },
     queue() {
       return this.$store.state.queue.items;
@@ -102,22 +123,16 @@ export default {
     queueUris() {
       return this.queue.map((item) => item.spotify_id);
     },
-    playing() {
-      return this.$store.state.player.playing;
+
+    position() {
+      return this.$store.state.queue.position;
     },
-    currentSong() {
-      return this.$store.state.queue.items.length
-        ? this.$store.state.queue.items[this.$store.state.queue.position]
-        : false;
-    },
+
     spotify() {
       return this.$store.state.spotify.object;
     },
   },
   watch: {
-    videoId() {
-      this.play();
-    },
     shouldPlay(val) {
       if (val) {
         this.play();
@@ -125,9 +140,13 @@ export default {
         this.pause();
       }
     },
-    currentSong(newSong, oldSong) {
-      if (newSong && newSong.spotify_id !== this.currentlyPlaying) {
-        this.playSong(newSong);
+    position(val) {
+      if (
+        typeof val !== "undefined" &&
+        val >= 0 &&
+        this.queue[val].id !== this.currentlyPlaying
+      ) {
+        this.playSong(this.queue[val]);
       }
     },
   },

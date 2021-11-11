@@ -2,27 +2,36 @@
   <div class="outer">
     <h2>Your Songs</h2>
 
-    <div class="pool">
+    <div class="pool" v-if="expandedSongs.length">
       <song
-        v-for="song in songs"
+        v-for="song in expandedSongs"
         :key="song.id"
         v-bind="song"
         @click.native="() => playSong(song)"
       />
+    </div>
+    <div class="pool-empty" v-else>
+      Like some songs in the bottom bar to add to your own collection
     </div>
   </div>
 </template>
 
 <script>
 import Song from "./common/Song.vue";
-// import { SONGS } from "~/assets/js/songs.js";
-import SONGS from "~/static/pitchfork.json";
 
 export default {
   components: { Song },
   computed: {
+    likedSongs() {
+      return this.$store.state.liked.items || [];
+    },
     songs() {
-      return SONGS;
+      return this.$store.state.liked.songs || [];
+    },
+    expandedSongs() {
+      return this.likedSongs
+        .map((item) => this.songs.find((song) => song.id === item))
+        .filter((item) => !!item);
     },
   },
   methods: {

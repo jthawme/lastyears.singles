@@ -2,7 +2,9 @@
   <div class="main">
     <span class="largeness">Music is dead. Long live Music.</span>
 
-    <your-songs />
+    <client-only>
+      <your-songs />
+    </client-only>
 
     <mosaic />
 

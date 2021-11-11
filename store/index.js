@@ -5,6 +5,7 @@ import data from "~/assets/data.json";
 export const state = () => {
   return {
     idle: false,
+    displayVisual: true,
     lists: [],
     breakpoint: {
       [Breakpoint.Desktop]: true,
@@ -24,6 +25,9 @@ export const mutations = {
   },
   setList(state, val) {
     state.lists = val;
+  },
+  toggleDisplayVisual(state, displayVisual) {
+    state.displayVisual = displayVisual;
   },
 };
 

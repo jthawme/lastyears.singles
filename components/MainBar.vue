@@ -17,7 +17,10 @@
         <button
           class="action"
           @click="togglePlaying"
-          :class="{ pending: isPendingPlaying, 'action-active': hasQueue }"
+          :class="{
+            pending: isPendingPlaying,
+            'action-active': queue.length > 0,
+          }"
         >
           <Icon :name="playing ? 'pause' : 'play'" />
         </button>
@@ -39,47 +42,81 @@
 
     <div class="column column-four">
       <div class="column-inner">
-        <button class="action action-highlight">
+        <button
+          class="action action-highlight"
+          :class="{ 'action-highlight-active': isLikedSong }"
+          v-if="currentInternalSong"
+          @click="toggleLikedSong"
+        >
           <Icon name="add" />
         </button>
       </div>
     </div>
 
-    <div class="percentage" />
+    <div class="percentage" v-if="isYoutube" />
   </aside>
 </template>
 
 <script>
+import { SaveMixin } from "~/assets/js/saveMixin";
+import { PLAYER_CONTROL } from "~/store/player";
 export default {
+  mixins: [SaveMixin],
   computed: {
-    displayVisual() {
-      return this.$store.state.player.displayVisual;
+    playerControl() {
+      return this.$store.state.player.playerControl;
     },
+    isYoutube() {
+      return this.playerControl === PLAYER_CONTROL.YOUTUBE;
+    },
+    displayVisual() {
+      return this.$store.state.displayVisual;
+    },
+
     playing() {
       return this.$store.state.player.shouldPlay;
     },
+    isPendingPlaying() {
+      return this.playing !== this.$store.state.player.playing;
+    },
+
     percentage() {
       return this.$store.state.player.percentage;
     },
+
+    songs() {
+      return this.$store.state.liked.songs;
+    },
+    liked() {
+      return this.$store.state.liked.items;
+    },
+    queue() {
+      return this.$store.state.queue.items;
+    },
     currentSong() {
-      return this.$store.state.queue.items.length
-        ? this.$store.state.queue.items[this.$store.state.queue.position]
+      return this.$store.state.player.song;
+    },
+    isLikedSong() {
+      return this.currentSong
+        ? this.liked.includes(this.currentSong.id)
         : false;
     },
-    hasQueue() {
-      return this.$store.state.queue.items.length > 0;
+    currentInternalSong() {
+      return (
+        this.currentSong && this.songs.find((r) => r.id === this.currentSong.id)
+      );
     },
     artist() {
       if (!this.currentSong) {
         return "";
       }
 
-      const [lead, ...rest] = this.currentSong.artists;
+      const [lead, ...rest] = this.currentInternalSong
+        ? this.currentInternalSong.artists
+        : this.currentSong.artists;
       return `${lead}${rest.length ? ` (ft. ${rest.join(", ")})` : ""}`;
     },
-    isPendingPlaying() {
-      return this.playing !== this.$store.state.player.playing;
-    },
+
     hasNext() {
       return (
         this.$store.state.queue.position <
@@ -92,7 +129,7 @@ export default {
   },
   methods: {
     toggleDisplayVisual() {
-      this.$store.commit("player/toggleDisplayVisual", !this.displayVisual);
+      this.$store.commit("toggleDisplayVisual", !this.displayVisual);
     },
     togglePlaying() {
       this.$store.commit("player/toggleShouldPlay", !this.playing);
@@ -102,6 +139,15 @@ export default {
     },
     prev() {
       this.$store.commit("queue/prevSong");
+    },
+    toggleLikedSong() {
+      if (!this.currentInternalSong) {
+        return;
+      }
+      this.toggleLikeSong(
+        this.currentInternalSong.id,
+        this.currentInternalSong.spotify_id
+      );
     },
   },
 };
@@ -226,6 +272,16 @@ aside {
     transform: translate3d(-50%, -50%, 0);
 
     border-radius: 100%;
+    z-index: -1;
+  }
+
+  &-highlight-active {
+    color: var(--color-bg);
+
+    &:after {
+      border: 0.1em solid var(--color-text);
+      background-color: var(--color-text);
+    }
   }
 
   &:not(:disabled):hover,

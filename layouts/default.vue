@@ -2,8 +2,8 @@
   <div>
     <DiscreetNav />
 
-    <hidden-player v-if="!canUseSpotify" />
-    <spotify-player v-else />
+    <youtube-player v-if="isYoutubeControl" />
+    <spotify-player v-if="isSpotifyControl" />
 
     <main :class="{ hide: idle && playing && displayVisual }">
       <nuxt />
@@ -22,16 +22,18 @@
 import smoothscroll from "smoothscroll-polyfill";
 import { listenCb, registerBootlegVH, tickUpdate } from "../assets/js/utils";
 import { SpotifyMixin } from "../assets/js/spotifyMixin";
+import { SavedMixin } from "../assets/js/saveMixin";
 import { BreakPointSet } from "../assets/js/mixins/breakpoints";
 import MainBar from "~~/components/MainBar.vue";
 import DiscreetNav from "~~/components/DiscreetNav.vue";
 import Squares from "~/components/Animations/Squares.vue";
-import HiddenPlayer from "~/components/HiddenPlayer.vue";
+import YoutubePlayer from "~/components/YoutubePlayer.vue";
 import SpotifyPlayer from "~/components/SpotifyPlayer.vue";
+import { PLAYER_CONTROL } from "~/store/player";
 
 export default {
-  components: { MainBar, DiscreetNav, Squares, HiddenPlayer, SpotifyPlayer },
-  mixins: [BreakPointSet, SpotifyMixin],
+  components: { MainBar, DiscreetNav, Squares, YoutubePlayer, SpotifyPlayer },
+  mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
     return {
       title: this.title,
@@ -51,18 +53,14 @@ export default {
     listenCb(document, "scroll", tickUpdate(this.idleChecker.bind(this)));
   },
   computed: {
-    canUseSpotify() {
-      return this.$store.state.spotify.canUseSpotify;
+    playerControl() {
+      return this.$store.state.player.playerControl;
     },
-    currentSong() {
-      return this.$store.state.queue.items.length
-        ? this.$store.state.queue.items[this.$store.state.queue.position]
-        : false;
+    isYoutubeControl() {
+      return this.playerControl === PLAYER_CONTROL.YOUTUBE;
     },
-    title() {
-      return this.currentSong
-        ? `🎵 ${this.currentSong.title} – Lists`
-        : "Lists";
+    isSpotifyControl() {
+      return this.playerControl === PLAYER_CONTROL.SPOTIFY;
     },
     idle() {
       return this.$store.state.idle;
@@ -74,7 +72,7 @@ export default {
       return this.$store.state.queue.source;
     },
     displayVisual() {
-      return this.$store.state.player.displayVisual;
+      return this.$store.state.displayVisual;
     },
   },
   methods: {

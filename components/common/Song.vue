@@ -85,12 +85,10 @@ export default {
   },
   computed: {
     currentSong() {
-      return this.$store.state.queue.items.length
-        ? this.$store.state.queue.items[this.$store.state.queue.position]
-        : false;
+      return this.$store.state.player.song;
     },
     isPlaying() {
-      return this.currentSong.id === this.id;
+      return this.currentSong?.id === this.id;
     },
     artist() {
       const [lead, ...rest] = this.artists;

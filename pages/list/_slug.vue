@@ -38,6 +38,12 @@ export default {
         source: this.source,
         position: this.items.findIndex((i) => i.id === item.id),
       });
+      this.$store.commit("player/setSongDetails", {
+        id: item.id,
+        title: item.title,
+        artists: item.artists,
+        spotify_id: item.spotify_id,
+      });
     },
   },
 };
