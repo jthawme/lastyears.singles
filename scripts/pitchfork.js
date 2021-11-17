@@ -1,7 +1,7 @@
 require("./bootstrap");
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
-const { runUpload } = require("./upload");
+const { runUpload, runUploadServer } = require("./upload");
 const { SOURCE } = require("./constants");
 
 const targetUrl =
@@ -42,7 +42,8 @@ const run = async () => {
     });
   });
 
-  runUpload(songs, SOURCE.PITCHFORK);
+  runUploadServer(songs, SOURCE.PITCHFORK);
+  // runUpload(songs, SOURCE.PITCHFORK);
 };
 
 run();

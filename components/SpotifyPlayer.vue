@@ -1,5 +1,9 @@
 <script>
-import { PLAYLISTS } from "~/assets/js/songs";
+const STATUS = {
+  READY: "ready",
+  OFFLINE: "offline",
+};
+
 export default {
   render() {
     return null;
@@ -11,9 +15,45 @@ export default {
     };
   },
   mounted() {
+    this.mountPlayerSdk();
     this.getCurrent();
   },
   methods: {
+    mountPlayerSdk() {
+      if (!document.querySelector("#playersdk")) {
+        window.onSpotifyWebPlaybackSDKReady =
+          this.onSpotifyWebPlaybackSDKReady.bind(this);
+
+        const scriptEl = document.createElement("script");
+        scriptEl.id = "playersdk";
+        scriptEl.src = `https://sdk.scdn.co/spotify-player.js`;
+        document.body.appendChild(scriptEl);
+      }
+    },
+    onSpotifyWebPlaybackSDKReady() {
+      this.webPlayer = new Spotify.Player({
+        name: "Music Lists",
+        getOAuthToken: (cb) => {
+          cb(this.spotifyToken);
+        },
+        volume: 1,
+      });
+
+      this.webPlayer.addListener("ready", ({ device_id }) => {
+        this.internalDevice = {
+          id: device_id,
+          status: STATUS.READY,
+        };
+      });
+
+      this.webPlayer.addListener("not_ready", ({ device_id }) => {
+        this.internalDevice = {
+          status: STATUS.OFFLINE,
+        };
+      });
+
+      this.webPlayer.connect();
+    },
     onTime(percentage) {
       this.$store.commit("player/setPlayerPercentage", percentage);
     },
@@ -24,15 +64,44 @@ export default {
       this.$store.commit("player/togglePlay", false);
     },
     async getDeviceId() {
+      const { devices } = await this.spotify.getMyDevices();
+
+      if (this.deviceId) {
+        const oldDevice = devices.find((d) => d.id === this.deviceId);
+
+        if (!oldDevice || !oldDevice.active) {
+          this.deviceId = null;
+        }
+      }
+
       if (!this.deviceId) {
-        const { devices } = await this.spotify.getMyDevices();
-        const activeDevice = devices.find((d) => d.is_active);
-        this.deviceId = activeDevice ? activeDevice.id : devices[0].id;
+        const getActiveId = () => {
+          const activeDevice = devices.find((d) => d.is_active);
+
+          if (activeDevice) {
+            return activeDevice.id;
+          }
+
+          if (
+            this.internalDevice &&
+            this.internalDevice.status === STATUS.READY
+          ) {
+            return this.internalDevice.id;
+          }
+
+          return devices[0].id;
+        };
+
+        this.deviceId = getActiveId();
       }
 
       return this.deviceId;
     },
+    async getLocalPlayerState() {
+      return this.webPlayer.getCurrentState();
+    },
     async playSong(song) {
+      console.log("running this here! 222");
       if (!this.playlistUri && this.source !== "your-songs") {
         return;
       }
@@ -59,6 +128,7 @@ export default {
       this.getCurrent();
     },
     async play() {
+      console.log("running this here!");
       await this.spotify.play();
       this.getCurrent();
     },
@@ -72,6 +142,10 @@ export default {
 
       if (!context || context.uri !== this.playlistUri) {
         this.$store.commit("queue/resetQueue");
+      }
+
+      if (!item) {
+        return;
       }
 
       this.currentlyPlaying = item.id;
@@ -100,11 +174,17 @@ export default {
     },
   },
   computed: {
+    playlists() {
+      return this.$store.state.playlists;
+    },
+    spotifyToken() {
+      return this.$store.state.spotify.token;
+    },
     source() {
       return this.$store.state.queue.source;
     },
     playlistUri() {
-      return PLAYLISTS[this.source] || false;
+      return this.playlists[this.source] || false;
     },
 
     shouldPlay() {
@@ -134,6 +214,9 @@ export default {
   },
   watch: {
     shouldPlay(val) {
+      if (!this.currentlyPlaying) {
+        return;
+      }
       if (val) {
         this.play();
       } else {

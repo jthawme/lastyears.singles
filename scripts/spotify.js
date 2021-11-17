@@ -1,4 +1,6 @@
 const SpotifyWebApi = require("spotify-web-api-node");
+const express = require("express");
+const open = require("open");
 
 const timer = (time = 2000, error = false) => {
   return new Promise((resolve, reject) => {
@@ -12,16 +14,52 @@ const timer = (time = 2000, error = false) => {
   });
 };
 
-const initialiseSpotify = () => {
-  const spotify = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
-    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  });
+let spotifyStored;
+const initialiseSpotify = (authCode = false) => {
+  if (spotifyStored) {
+    return spotifyStored;
+  }
 
-  return spotify.clientCredentialsGrant().then((data) => {
-    spotify.setAccessToken(data.body["access_token"]);
-    return spotify;
-  });
+  if (authCode) {
+    return new Promise((resolve) => {
+      const spotify = new SpotifyWebApi({
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+        redirectUri: "http://localhost:3000/callback",
+      });
+
+      const app = express();
+      app.get("/callback", async (req, res) => {
+        const data = await spotify.authorizationCodeGrant(req.query.code);
+        spotify.setAccessToken(data.body["access_token"]);
+        spotify.setRefreshToken(data.body["refresh_token"]);
+        spotifyStored = spotify;
+        res.send("hey");
+        resolve(spotify);
+        server.close();
+      });
+
+      const server = app.listen(3000, () => {
+        var authorizeURL = spotify.createAuthorizeURL(
+          ["playlist-modify-public", "user-read-private"],
+          "local"
+        );
+
+        open(authorizeURL);
+      });
+    });
+  } else {
+    const spotify = new SpotifyWebApi({
+      clientId: process.env.SPOTIFY_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      redirectUri: "http://www.example.com/callback",
+    });
+
+    return spotify.clientCredentialsGrant().then((data) => {
+      spotify.setAccessToken(data.body["access_token"]);
+      return spotify;
+    });
+  }
 };
 
 const getTrack = async (spotifyId) => {
@@ -37,7 +75,52 @@ const getTrack = async (spotifyId) => {
   }
 };
 
-const handleSpotifyError = (e) => {
+let userId = null;
+const getUserId = async (spotify) => {
+  if (!userId) {
+    const me = await spotify.getMe();
+    userId = me.id;
+  }
+
+  return userId;
+};
+
+const getPlaylist = async (name) => {
+  try {
+    const spotify = await initialiseSpotify(true);
+
+    const userId = await getUserId(spotify);
+    const data = await spotify.getUserPlaylists(userId, { limit: 50 });
+
+    return data.body.items.find((item) => item.name === name);
+  } catch (e) {
+    return handleSpotifyError(e, true).then(() => {
+      return getPlaylist(name);
+    });
+  }
+};
+
+const createPlaylist = async (name, uris, description) => {
+  try {
+    const spotify = await initialiseSpotify(true);
+    const playlist = await spotify
+      .createPlaylist(name, { description, collaborative: false, public: true })
+      .then((data) => data.body);
+    await spotify.addTracksToPlaylist(
+      playlist.id,
+      uris.map((u) => `spotify:track:${u}`)
+    );
+
+    return playlist;
+  } catch (e) {
+    console.log(e, handleSpotifyError);
+    return handleSpotifyError(e, true).then(() => {
+      return createPlaylist(name, uris, description);
+    });
+  }
+};
+
+const handleSpotifyError = (e, authCode = false) => {
   if (e.statusCode === 429) {
     const retryAfter = e.headers["retry-after"]
       ? parseInt(e.headers["retry-after"])
@@ -47,7 +130,7 @@ const handleSpotifyError = (e) => {
   }
 
   if (e.statusCode === 401) {
-    return initialiseSpotify();
+    return initialiseSpotify(authCode);
   }
 
   console.log(e.statusCode);
@@ -55,4 +138,4 @@ const handleSpotifyError = (e) => {
   throw new Error(e);
 };
 
-module.exports = { initialiseSpotify, getTrack };
+module.exports = { initialiseSpotify, getTrack, getPlaylist, createPlaylist };

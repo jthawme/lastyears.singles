@@ -5,7 +5,3 @@ export const SOURCE = {
   BILLBOARD: "billboard",
   FADER: "fader",
 };
-
-export const PLAYLISTS = {
-  [SOURCE.PITCHFORK]: "spotify:playlist:5riY3rJTujsaaqf4tOyiel",
-};

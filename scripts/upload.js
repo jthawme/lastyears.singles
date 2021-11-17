@@ -1,15 +1,100 @@
 const inquirer = require("inquirer");
-const { saveSong, saveSearched, getSearched } = require("./db");
+const { saveSong, saveSearched, getSearched, getSongs } = require("./db");
+const Bundler = require("parcel-bundler");
+const express = require("express");
+const path = require("path");
 
 const youtubeRegex =
   /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
 const spotifyRegex =
   /(https?:\/\/open.spotify.com\/(track|user|artist|album)\/[a-zA-Z0-9]+(\/playlist\/[a-zA-Z0-9]+|)|spotify:(track|user|artist|album):[a-zA-Z0-9]+(:playlist:[a-zA-Z0-9]+|))/;
 
-const getPrompt = (schema) => {
+const runUploadServer = (items, source) => {
   return new Promise((resolve) => {
-    prompt.get(schema, (err, result) => {
-      resolve(result);
+    let server = null;
+    let itemIdx = 0;
+    const app = express();
+
+    const file = path.join(__dirname, "public", "index.html"); // Pass an absolute path to the entrypoint here
+    const options = {}; // See options section of api docs, for the possibilities
+
+    // Initialize a new bundler using a file and options
+    const bundler = new Bundler(file, options);
+
+    app.use(express.json());
+
+    app.get("/api/all", async (req, res) => {
+      const songs = await getSongs();
+
+      return res.json({ songs });
+    });
+
+    app.get("/api/next", async (req, res) => {
+      const getNext = async () => {
+        if (itemIdx >= items.length) {
+          return false;
+        } else {
+          const { youtubeLink, title, artist, position } = items[itemIdx];
+
+          const prev = await getSearched(title, artist, source);
+
+          if (prev) {
+            itemIdx++;
+            return getNext();
+          }
+
+          return items[itemIdx];
+        }
+      };
+
+      const next = await getNext();
+
+      if (!next) {
+        res.json({
+          done: true,
+        });
+        server.close();
+        resolve();
+        return;
+      }
+
+      res.json({
+        item: next,
+      });
+    });
+
+    app.post("/api/submit", async (req, res) => {
+      try {
+        const { songId, spotifyTrack, youtubeLink, title, artist, position } =
+          req.body;
+
+        let id = songId;
+
+        if (!spotifyTrack || !youtubeLink) {
+          throw new Error("Need spotify and yutube");
+        }
+
+        if (!songId) {
+          const spotifyId = spotifyTrack.split("track/").pop();
+
+          const songRow = await saveSong(spotifyId, youtubeLink);
+          id = songRow.id;
+        }
+        await saveSearched(id, title, artist, source, position);
+
+        return res.json({ success: true });
+      } catch (e) {
+        console.log("submit error", e);
+        return res.json({ success: false });
+      }
+    });
+
+    // Let express use the bundler middleware, this will let Parcel handle every request over your express server
+    app.use(bundler.middleware());
+
+    // Listen on port 8080
+    server = app.listen(8080, () => {
+      console.log(`Open: http://localhost:8080`);
     });
   });
 };
@@ -77,4 +162,4 @@ const runUpload = (items, source) => {
   });
 };
 
-module.exports = { runUpload };
+module.exports = { runUpload, runUploadServer };

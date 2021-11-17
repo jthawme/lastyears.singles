@@ -28,7 +28,7 @@ export const getSpotifyAuthoriseUrl = (stateToken) => {
       client_id: "9a5456b308b54bf2bf221cb80bb938c5",
       response_type: "token",
       scope:
-        "user-library-modify,streaming,user-read-private,user-read-playback-state",
+        "user-library-modify,user-read-playback-state,streaming,user-read-private,user-read-email",
       redirect_uri: getRedirectURI(),
       state: stateToken,
     },

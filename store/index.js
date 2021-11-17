@@ -1,12 +1,14 @@
 import { Breakpoint } from "~/assets/js/mixins/breakpoints";
 import { NAMES } from "~/scripts/constants";
-import data from "~/assets/data.json";
+import allSongs from "~/static/all.json";
+import allPlaylists from "~/static/playlists.json";
 
 export const state = () => {
   return {
     idle: false,
     displayVisual: true,
     lists: [],
+    playlists: {},
     breakpoint: {
       [Breakpoint.Desktop]: true,
       [Breakpoint.LargeMobile]: true,
@@ -29,12 +31,17 @@ export const mutations = {
   toggleDisplayVisual(state, displayVisual) {
     state.displayVisual = displayVisual;
   },
+  setPlaylists(state, playlists) {
+    state.playlists = { ...playlists };
+  },
 };
 
 export const actions = {
   async nuxtServerInit({ commit }, { env }) {
     const sources = [
-      ...new Set(data.flatMap((item) => item.positions.map((p) => p.source))),
+      ...new Set(
+        allSongs.flatMap((item) => item.positions.map((p) => p.source))
+      ),
     ];
 
     commit(
@@ -44,5 +51,7 @@ export const actions = {
         slug: s,
       }))
     );
+
+    commit("setPlaylists", allPlaylists);
   },
 };

@@ -1,5 +1,6 @@
 export const state = () => {
   return {
+    token: null,
     spotifyAuthoriseUrl: null,
     canUseSpotify: false,
     object: null,
@@ -7,6 +8,9 @@ export const state = () => {
 };
 
 export const mutations = {
+  setSpotifyToken(state, token) {
+    state.token = token;
+  },
   setSpotifyAuthoriseUrl(state, url) {
     state.spotifyAuthoriseUrl = url;
   },
