@@ -30,6 +30,16 @@
         <button class="action" @click="next" :disabled="!hasNext">
           <Icon name="skipforward" />
         </button>
+        <a
+          target="_blank"
+          v-if="externalLink"
+          :href="externalLink"
+          class="action action-active"
+          :class="{ 'action-spotify': !isYoutube }"
+        >
+          <Icon v-if="isYoutube" name="open" />
+          <SpotifyLogo v-else class="spotify" />
+        </a>
       </div>
     </div>
 
@@ -60,7 +70,10 @@
 <script>
 import { SaveMixin } from "~/assets/js/saveMixin";
 import { PLAYER_CONTROL } from "~/store/player";
+import SpotifyLogo from "~/assets/img/spotify-icon.svg?inline";
+
 export default {
+  components: { SpotifyLogo },
   mixins: [SaveMixin],
   computed: {
     playerControl() {
@@ -105,6 +118,20 @@ export default {
       return (
         this.currentSong && this.songs.find((r) => r.id === this.currentSong.id)
       );
+    },
+    externalLink() {
+      if (!this.currentSong) {
+        return false;
+      }
+
+      if (this.currentSong.youtube_link) {
+        return this.currentSong.youtube_link;
+      }
+      if (this.currentSong.spotify_id) {
+        return `spotify:track:${this.currentSong.spotify_id}`;
+      }
+
+      return false;
     },
     artist() {
       if (!this.currentSong) {
@@ -260,6 +287,10 @@ aside {
   background-color: transparent;
   outline: 0;
 
+  &-spotify {
+    color: white;
+  }
+
   &.pending {
     animation: {
       name: BLINK;
@@ -269,7 +300,8 @@ aside {
     }
   }
 
-  &[disabled] {
+  &[disabled],
+  &.disabled {
     opacity: 0.2;
   }
 
@@ -354,6 +386,18 @@ aside {
   to {
     opacity: 0.5;
   }
+}
+
+.action-spotify {
+  margin: -0.65em ​0;
+
+  &:before {
+    bottom: calc(100% + 6px);
+  }
+}
+
+.spotify {
+  height: 21px;
 }
 </style>
 

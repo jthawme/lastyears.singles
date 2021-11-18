@@ -1,6 +1,6 @@
 <template>
   <span class="icon">
-    <component :is="iconComponent"/>
+    <component :is="iconComponent" />
   </span>
 </template>
 
@@ -12,6 +12,7 @@ import pause from "~/assets/img/icons/pause.svg?inline";
 import add from "~/assets/img/icons/add.svg?inline";
 import skipbackward from "~/assets/img/icons/skipbackward.svg?inline";
 import skipforward from "~/assets/img/icons/skipforward.svg?inline";
+import open from "~/assets/img/icons/open.svg?inline";
 
 const icons = {
   pause,
@@ -20,24 +21,25 @@ const icons = {
   layers,
   add,
   skipbackward,
-  skipforward
+  skipforward,
+  open,
 };
 
-export const iconKeys = Object.keys(icons)
+export const iconKeys = Object.keys(icons);
 
 export default {
   props: {
     name: {
       // type: String as PropType<keyof typeof icons>,
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     iconComponent() {
       return icons[this.name];
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -104,6 +104,7 @@ export default {
         title: item.title,
         artists: item.artists,
         spotify_id: item.spotify_id,
+        youtube_link: item.youtube_link,
       });
     },
     videoId() {
