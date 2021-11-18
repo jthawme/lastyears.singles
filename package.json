@@ -14,6 +14,7 @@
   "dependencies": {
     "@nuxt/http": "^0.6.4",
     "@nuxtjs/pwa": "^3.3.5",
+    "@nuxtjs/style-resources": "^1.2.1",
     "@nuxtjs/svg": "^0.3.0",
     "animejs": "^3.2.1",
     "cheerio": "^1.0.0-rc.10",

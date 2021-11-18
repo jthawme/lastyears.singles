@@ -45,6 +45,8 @@ class MainEngine {
     });
 
     this.scene = new THREE.Scene();
+    this.group = new THREE.Group();
+    this.scene.add(this.group);
 
     this._setupCamera();
   }
@@ -122,11 +124,11 @@ class MainEngine {
   }
 
   addObject(obj) {
-    this.scene.add(obj);
+    this.group.add(obj);
   }
 
   removeObject(obj) {
-    this.scene.remove(obj);
+    this.group.remove(obj);
   }
 
   destroy() {
@@ -157,6 +159,10 @@ class MainEngine {
         for (const material of object.material) cleanMaterial(material);
       }
     });
+  }
+
+  scale(num) {
+    this.group.scale.set(num, num, num);
   }
 }
 

@@ -29,9 +29,13 @@ export default {
 .largeness {
   display: block;
 
-  font-size: 17vw;
+  font-size: 24vw;
   line-height: 0.9;
 
   margin: 0 -1vw;
+
+  @include tablet {
+    font-size: 17vw;
+  }
 }
 </style>

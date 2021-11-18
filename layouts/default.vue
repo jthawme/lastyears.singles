@@ -81,7 +81,7 @@ export default {
       this.$store.commit("setIdle", false);
       this.idleTimer = setTimeout(() => {
         this.$store.commit("setIdle", true);
-      }, 5000);
+      }, 10000);
     },
   },
 };
@@ -118,12 +118,18 @@ export default {
 
   --icon-small: 1em;
 
-  --page-padding-x: 70px;
-  --page-padding-y: 32px;
+  --page-padding-x: 20px;
+  --page-padding-y: 16px;
   --page-padding: var(--page-padding-y) var(--page-padding-x);
 
   @for $i from 1 through 20 {
     --size-unit-#{$i}: #{$i * 5px};
+  }
+
+  @include tablet {
+    --page-padding-x: 70px;
+    --page-padding-y: 32px;
+    --page-padding: var(--page-padding-y) var(--page-padding-x);
   }
 }
 

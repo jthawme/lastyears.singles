@@ -118,6 +118,7 @@ export default {
   cursor: pointer;
 
   outline: 0;
+  max-width: 100%;
 
   &.active {
     color: var(--color-active);

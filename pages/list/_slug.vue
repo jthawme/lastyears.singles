@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <nuxt-link class="back std" to="/">&lt; Back</nuxt-link>
+    <nuxt-link class="back std" to="/">⟵ Back</nuxt-link>
     <div class="list">
       <div
         class="item"
@@ -60,9 +60,17 @@ export default {
   flex-direction: column;
 
   .item {
-    margin-left: calc(var(--column, 0) * 85%);
+    margin-left: calc(var(--column, 0) * 50%);
 
     padding-bottom: 50px;
+  }
+
+  @include tablet {
+    .item {
+      margin-left: calc(var(--column, 0) * 85%);
+
+      padding-bottom: 50px;
+    }
   }
 }
 
@@ -70,5 +78,7 @@ export default {
   color: inherit;
 
   text-decoration: none;
+
+  margin-bottom: 3em;
 }
 </style>

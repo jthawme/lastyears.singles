@@ -53,25 +53,42 @@ export default {
 
 <style lang="scss" scoped>
 nav {
-  position: fixed;
+  position: relative;
 
-  top: var(--page-padding-y);
-  right: var(--page-padding-x);
+  top: 0;
+  right: 0;
 
-  display: flex;
+  width: 100%;
 
-  align-items: center;
+  z-index: 10;
 
-  z-index: 5;
+  display: unset;
+
+  @include tablet {
+    position: fixed;
+
+    top: var(--page-padding-y);
+    right: var(--page-padding-x);
+
+    display: flex;
+    align-items: center;
+
+    width: auto;
+  }
 }
 
 .link {
-  position: relative;
+  position: sticky;
+
+  top: var(--page-padding-x);
+  right: var(--page-padding-y);
 
   display: block;
 
   width: 28px;
   height: 28px;
+
+  float: right;
 
   color: var(--color-text);
   border: 0.1rem solid currentColor;
@@ -111,6 +128,15 @@ nav {
 
   &.active:before {
     transform: scale(1.1) translate3d(-50%, -50%, 0);
+  }
+
+  @include tablet {
+    position: relative;
+
+    float: unset;
+
+    top: 0;
+    right: 0;
   }
 }
 </style>

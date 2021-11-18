@@ -163,45 +163,79 @@ aside {
   z-index: 5;
 
   width: 100%;
-  height: 1px;
 
-  display: flex;
+  display: grid;
 
-  padding: 0 70px;
+  padding: 0 var(--page-padding-x) calc(var(--page-padding-y) * 1.5);
+
+  grid-template-columns: 30px 1fr 30px;
+  grid-template-areas:
+    "current current current"
+    "layers actions save";
+
+  @include tablet {
+    display: flex;
+    height: 1px;
+    padding: 0 var(--page-padding-x);
+  }
 }
 
 .column {
   position: relative;
 
   &-inner {
-    position: absolute;
-
     width: 100%;
 
     display: flex;
     align-items: flex-end;
 
-    bottom: 32px;
+    @include tablet {
+      position: absolute;
+      bottom: 32px;
+    }
   }
 
   &-one {
     flex-basis: 25%;
+    grid-area: layers;
   }
 
   &-two {
     flex-basis: 150px;
+    grid-area: actions;
+    .column-inner {
+      justify-content: center;
+
+      @include tablet {
+        justify-content: flex-start;
+      }
+    }
   }
 
   &-three {
     flex-grow: 1;
+    grid-area: current;
+
+    padding-bottom: 1em;
+    font-size: var(--font-size-small);
 
     .column-inner {
-      bottom: 30px;
+      color: var(--color-active);
+    }
+
+    @include tablet {
+      font-size: var(--font-size-normal);
+      padding-bottom: 0;
+
+      .column-inner {
+        bottom: 30px;
+      }
     }
   }
 
   &-four {
     flex-basis: 50px;
+    grid-area: save;
 
     .column-inner {
       justify-content: flex-end;
@@ -241,6 +275,7 @@ aside {
 
   &-active:before {
     content: "";
+    display: none;
 
     position: absolute;
 
@@ -254,6 +289,10 @@ aside {
 
     background-color: currentColor;
     border-radius: 100%;
+
+    @include tablet {
+      display: block;
+    }
   }
 
   &-highlight:after {

@@ -95,7 +95,7 @@ export default {
     dirs: ["~/components", "~/components/common"],
   },
 
-  buildModules: ["@nuxtjs/svg"],
+  buildModules: ["@nuxtjs/svg", "@nuxtjs/style-resources"],
 
   modules: ["@nuxtjs/pwa", "@nuxt/http"],
 

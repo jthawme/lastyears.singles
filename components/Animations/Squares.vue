@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { deg2rad, mapRange } from "~/assets/js/utils";
+import { clamp, deg2rad, mapRange } from "~/assets/js/utils";
 import * as THREE from "three";
 import { MainEngine } from "~/assets/js/engine";
 import Canvas from "../common/Canvas.vue";
@@ -128,10 +128,14 @@ export default {
       });
 
       this.engine.start();
+      this.onResize();
     },
     onResize() {
       if (this.engine) {
         this.engine.resize(this.width, this.height);
+
+        const scale = clamp(mapRange(this.width / 950, 0, 1, 0.35, 1), 0.2, 1);
+        this.group.scale.set(scale, scale, scale);
         this.engine.move(this.group, 0.5, 0.5);
       }
     },
