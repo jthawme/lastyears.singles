@@ -4,7 +4,7 @@ const path = require("path");
 const { getPlaylist, createPlaylist, initialiseSpotify } = require("./spotify");
 const { NAMES, SOURCE } = require("./constants");
 const { getSongs } = require("./db");
-const year = 2021;
+const year = 2020;
 
 const getPlaylistName = (source) => {
   return `${NAMES[source]} Top Songs ${year}`;
