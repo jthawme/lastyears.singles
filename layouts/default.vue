@@ -9,8 +9,9 @@
       <nuxt />
     </main>
 
-    <transition name="fade" exitBeforeEnter>
+    <transition name="fade" mode="out-in">
       <squares v-if="queueSource === 'pitchfork' && displayVisual" />
+      <circles v-if="queueSource === 'nme' && displayVisual" />
     </transition>
 
     <MainBar />
@@ -30,9 +31,17 @@ import Squares from "~/components/Animations/Squares.vue";
 import YoutubePlayer from "~/components/YoutubePlayer.vue";
 import SpotifyPlayer from "~/components/SpotifyPlayer.vue";
 import { PLAYER_CONTROL } from "~/store/player";
+import Circles from "~/components/Animations/Circles.vue";
 
 export default {
-  components: { MainBar, DiscreetNav, Squares, YoutubePlayer, SpotifyPlayer },
+  components: {
+    MainBar,
+    DiscreetNav,
+    Squares,
+    YoutubePlayer,
+    SpotifyPlayer,
+    Circles,
+  },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
     return {

@@ -23,8 +23,8 @@ const initialiseSpotify = (authCode = false) => {
   if (authCode) {
     return new Promise((resolve) => {
       const spotify = new SpotifyWebApi({
-        clientId: process.env.SPOTIFY_CLIENT_ID,
-        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+        clientId: process.env.SPOTIFY_BACKEND_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_BACKEND_CLIENT_SECRET,
         redirectUri: "http://localhost:3000/callback",
       });
 
@@ -50,8 +50,8 @@ const initialiseSpotify = (authCode = false) => {
     });
   } else {
     const spotify = new SpotifyWebApi({
-      clientId: process.env.SPOTIFY_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      clientId: process.env.SPOTIFY_BACKEND_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_BACKEND_CLIENT_SECRET,
       redirectUri: "http://www.example.com/callback",
     });
 

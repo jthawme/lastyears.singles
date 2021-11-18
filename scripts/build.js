@@ -20,7 +20,7 @@ getSongs().then((data) => {
   }, {});
 
   Object.entries(reduced).forEach(([source, items]) => {
-    items.sort((a, b) => b.position - a.position);
+    items.sort((a, b) => b.positions - a.positions);
 
     jsonfile.writeFileSync(
       path.join(__dirname, `../static/${source}.json`),

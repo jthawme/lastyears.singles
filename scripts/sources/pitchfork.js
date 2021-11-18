@@ -1,8 +1,8 @@
 require("./bootstrap");
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
-const { runUpload, runUploadServer } = require("./upload");
-const { SOURCE } = require("./constants");
+const { runUpload, runUploadServer } = require("../upload");
+const { SOURCE } = require("../constants");
 
 const targetUrl =
   "https://pitchfork.com/features/lists-and-guides/best-songs-2020/";

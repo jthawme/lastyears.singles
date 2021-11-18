@@ -3,6 +3,7 @@ const { saveSong, saveSearched, getSearched, getSongs } = require("./db");
 const Bundler = require("parcel-bundler");
 const express = require("express");
 const path = require("path");
+const open = require("open");
 
 const youtubeRegex =
   /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
@@ -70,7 +71,7 @@ const runUploadServer = (items, source) => {
 
         let id = songId;
 
-        if (!spotifyTrack || !youtubeLink) {
+        if ((!spotifyTrack || !youtubeLink) && !songId) {
           throw new Error("Need spotify and yutube");
         }
 
@@ -82,6 +83,7 @@ const runUploadServer = (items, source) => {
         }
         await saveSearched(id, title, artist, source, position);
 
+        itemIdx++;
         return res.json({ success: true });
       } catch (e) {
         console.log("submit error", e);
@@ -94,6 +96,7 @@ const runUploadServer = (items, source) => {
 
     // Listen on port 8080
     server = app.listen(8080, () => {
+      open("http://localhost:8080");
       console.log(`Open: http://localhost:8080`);
     });
   });
