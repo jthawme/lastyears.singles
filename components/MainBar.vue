@@ -142,7 +142,7 @@ export default {
         ? this.currentInternalSong.artists
         : this.currentSong.artists;
 
-      if (this.currentSong.title.includes("feat. ")) {
+      if (this.currentSong.title.toLowerCase().includes("feat. ")) {
         return lead;
       }
       return `${lead}${rest.length ? ` (ft. ${rest.join(", ")})` : ""}`;

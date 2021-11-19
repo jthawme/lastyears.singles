@@ -16,6 +16,7 @@
 
 <script>
 import { makeNoise2D } from "fast-simplex-noise";
+import { NAMES } from "~/scripts/constants";
 
 export default {
   async asyncData({ params, $http }) {
@@ -30,9 +31,20 @@ export default {
       })),
     };
   },
+  head() {
+    const parts = this.source.split("-");
+    const year = parseInt(parts.splice(parts.length - 1, 1));
+    const baseName = parts.join("-");
+
+    return {
+      title: `${this.playing ? "🎵" : ""}${NAMES[baseName]}${
+        year !== new Date().getFullYear() ? ` (${year})` : ""
+      }`,
+    };
+  },
   methods: {
     playSong(item) {
-      Plausible("Song", { props: { song: item.id, source: this.source } });
+      plausible("Song", { props: { song: item.id, source: this.source } });
       this.$store.commit("player/toggleShouldPlay", true);
       this.$store.commit("queue/createQueue", {
         items: this.items,
@@ -45,6 +57,11 @@ export default {
         artists: item.artists,
         spotify_id: item.spotify_id,
       });
+    },
+  },
+  computed: {
+    playing() {
+      return this.$store.state.player.playing;
     },
   },
 };

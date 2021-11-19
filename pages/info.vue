@@ -17,7 +17,17 @@ import About from "../components/About.vue";
 import Mosaic from "../components/Mosaic.vue";
 import YourSongs from "../components/YourSongs.vue";
 export default {
+  head() {
+    return {
+      title: `${this.playing ? "🎵" : ""} Info`,
+    };
+  },
   components: { YourSongs, About, Mosaic },
+  computed: {
+    playing() {
+      return this.$store.state.player.playing;
+    },
+  },
 };
 </script>
 

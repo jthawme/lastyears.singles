@@ -10,8 +10,8 @@
     </main>
 
     <transition name="fade" mode="out-in">
-      <squares v-if="queueSource === 'pitchfork' && displayVisual" />
-      <circles v-if="queueSource === 'nme' && displayVisual" />
+      <squares v-if="isSource('pitchfork') && displayVisual" />
+      <circles v-if="isSource('nme') && displayVisual" />
     </transition>
 
     <MainBar />
@@ -85,6 +85,9 @@ export default {
     },
   },
   methods: {
+    isSource(source) {
+      return this.queueSource && this.queueSource.includes(source);
+    },
     idleChecker() {
       clearTimeout(this.idleTimer);
       this.$store.commit("setIdle", false);

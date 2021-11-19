@@ -18,11 +18,14 @@ import TextMutate from "~/components/common/TextMutate.vue";
 export default {
   head() {
     return {
-      title: "Choose",
+      title: `${this.playing ? "🎵" : ""} Choose`,
     };
   },
   components: { TextMutate },
   computed: {
+    playing() {
+      return this.$store.state.player.playing;
+    },
     lists() {
       const lists = this.$store.state.lists;
       const years = lists.reduce((prev, curr) => {

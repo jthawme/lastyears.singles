@@ -93,7 +93,7 @@ export default {
     artist() {
       const [lead, ...rest] = this.artists;
 
-      if (this.title.includes("feat. ")) {
+      if (this.title.toLowerCase().includes("feat. ")) {
         return lead;
       }
 

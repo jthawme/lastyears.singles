@@ -84,7 +84,10 @@ export default {
     ],
     script: [
       {
-        src: "https://plausible.io/js/plausible.js",
+        src:
+          process.env.NODE_ENV !== "production"
+            ? "https://plausible.io/js/plausible.local.js"
+            : "https://plausible.io/js/plausible.js",
         ["data-domain"]: "lastyears.singles",
         defer: true,
       },

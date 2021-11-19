@@ -84,7 +84,6 @@ export default {
         this.unlisten = [];
       }
 
-      console.log("circles go");
       this.engine = new MainEngine();
       this.engine.setup(this.canvas, this.width, this.height);
 
