@@ -55,7 +55,7 @@ const createPlaylistIfNotExist = async (source, items) => {
 
   const playlists = await Promise.all(
     Object.entries(songs).map(([source, items]) => {
-      items.sort((a, b) => b.position - a.position);
+      items.sort((a, b) => b.positions - a.positions);
 
       return createPlaylistIfNotExist(
         source,
