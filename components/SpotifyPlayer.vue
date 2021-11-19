@@ -125,6 +125,7 @@ export default {
           position: this.queueUris.findIndex((uri) => song.spotify_id === uri),
         },
       });
+
       this.getCurrent();
     },
     async play() {
@@ -137,39 +138,44 @@ export default {
     },
     async getCurrent() {
       clearTimeout(this.updateTimer);
-      const { is_playing, item, progress_ms, context } =
-        await this.spotify.getMyCurrentPlaybackState();
 
-      if (!context || context.uri !== this.playlistUri) {
-        this.$store.commit("queue/resetQueue");
-      }
+      try {
+        const { is_playing, item, progress_ms, context } =
+          await this.spotify.getMyCurrentPlaybackState();
 
-      if (!item) {
-        return;
-      }
+        if (!context || context.uri !== this.playlistUri) {
+          this.$store.commit("queue/resetQueue");
+        }
 
-      this.currentlyPlaying = item.id;
-      const playingIndex = this.queue.findIndex(
-        (row) => row.spotify_id === item.id
-      );
-      this.$store.commit("queue/setQueuePosition", playingIndex);
+        if (!item) {
+          return;
+        }
 
-      this.$store.commit("player/setSongDetails", {
-        id: this.songs.find((row) => row.spotify_id === item.id)?.id || -1,
-        title: item.name,
-        artists: item.artists.map((a) => a.name),
-        spotify_id: item.id,
-      });
+        this.currentlyPlaying = item.id;
+        const playingIndex = this.queue.findIndex(
+          (row) => row.spotify_id === item.id
+        );
+        this.$store.commit("queue/setQueuePosition", playingIndex);
 
-      this.$store.commit("player/togglePlay", is_playing);
-      this.$store.commit("player/toggleShouldPlay", is_playing);
-      this.$store.commit(
-        "player/setPlayerPercentage",
-        progress_ms / item.duration_ms
-      );
+        this.$store.commit("player/setSongDetails", {
+          id: this.songs.find((row) => row.spotify_id === item.id)?.id || -1,
+          title: item.name,
+          artists: item.artists.map((a) => a.name),
+          spotify_id: item.id,
+        });
 
-      if (is_playing) {
-        this.updateTimer = setTimeout(() => this.getCurrent(), 10000);
+        this.$store.commit("player/togglePlay", is_playing);
+        this.$store.commit("player/toggleShouldPlay", is_playing);
+        this.$store.commit(
+          "player/setPlayerPercentage",
+          progress_ms / item.duration_ms
+        );
+
+        if (is_playing) {
+          this.updateTimer = setTimeout(() => this.getCurrent(), 2000);
+        }
+      } catch (e) {
+        console.error("Get current error", e);
       }
     },
   },

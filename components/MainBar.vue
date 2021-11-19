@@ -141,6 +141,10 @@ export default {
       const [lead, ...rest] = this.currentInternalSong
         ? this.currentInternalSong.artists
         : this.currentSong.artists;
+
+      if (this.currentSong.title.includes("feat. ")) {
+        return lead;
+      }
       return `${lead}${rest.length ? ` (ft. ${rest.join(", ")})` : ""}`;
     },
 

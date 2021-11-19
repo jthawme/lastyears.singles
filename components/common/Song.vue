@@ -92,6 +92,11 @@ export default {
     },
     artist() {
       const [lead, ...rest] = this.artists;
+
+      if (this.title.includes("feat. ")) {
+        return lead;
+      }
+
       return `${lead}${rest.length ? ` (ft. ${rest.join(", ")})` : ""}`;
     },
     basicPosition() {
