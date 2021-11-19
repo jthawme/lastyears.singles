@@ -42,7 +42,7 @@ const run = async () => {
     });
   });
 
-  runUploadServer(songs, SOURCE.PITCHFORK);
+  runUploadServer(songs, SOURCE.PITCHFORK, 2020);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 

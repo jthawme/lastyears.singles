@@ -26,7 +26,7 @@ const run = async () => {
     });
   });
 
-  await runUploadServer(songs, SOURCE.NME);
+  await runUploadServer(songs, SOURCE.NME, 2020);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 

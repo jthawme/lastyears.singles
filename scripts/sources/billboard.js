@@ -26,7 +26,7 @@ const run = async () => {
     });
   });
 
-  await runUploadServer(songs.reverse(), SOURCE.BILLBOARD);
+  await runUploadServer(songs.reverse(), SOURCE.BILLBOARD, 2020);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 

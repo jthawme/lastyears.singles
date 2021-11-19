@@ -78,6 +78,8 @@ export const SpotifyMixin = {
         const prevStateToken = localStorage.getItem(STATE_KEY);
 
         if (state && access_token && expires_in && state === prevStateToken) {
+          plausible("Spotify Connect", { props: { status: "completed" } });
+
           this.setToken(
             access_token.toString(),
             Date.now() + parseFloat(expires_in.toString()) * 1000

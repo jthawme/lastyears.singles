@@ -46,25 +46,26 @@ const saveSong = async (spotifyId, youtubeLink) => {
   return song;
 };
 
-const saveSearched = async (songId, title, artist, source, position) => {
+const saveSearched = async (songId, title, artist, source, position, year) => {
   return knex("searched").insert({
     song_id: songId,
     title,
     artist,
     source,
     position,
+    year,
   });
 };
 
 const getSongs = async () => {
   const rows = await knex("song")
     .innerJoin("searched", "searched.song_id", "song.id")
-    .select("song.*", "searched.position", "searched.source")
+    .select("song.*", "searched.position", "searched.source", "searched.year")
     .then((res) => res);
 
   return Object.values(
     rows.reduce((prev, curr) => {
-      const { position, source, spotify_id, artists, ...rest } = curr;
+      const { position, source, year, spotify_id, artists, ...rest } = curr;
       if (!prev[curr.id]) {
         prev[curr.id] = {
           ...rest,
@@ -77,6 +78,7 @@ const getSongs = async () => {
       prev[curr.id].positions.push({
         source,
         position,
+        year,
       });
 
       return prev;
@@ -84,4 +86,28 @@ const getSongs = async () => {
   );
 };
 
-module.exports = { knex, getSearched, saveSong, saveSearched, getSongs };
+const reduceSongStructure = (songs) => {
+  return songs.reduce((prev, curr) => {
+    const { positions, ...rest } = curr;
+
+    positions.forEach((position) => {
+      const key = `${position.source}-${position.year}`;
+      if (!prev[key]) {
+        prev[key] = [];
+      }
+
+      prev[key].push({ ...rest, positions: position.position });
+    });
+
+    return prev;
+  }, {});
+};
+
+module.exports = {
+  knex,
+  getSearched,
+  saveSong,
+  saveSearched,
+  getSongs,
+  reduceSongStructure,
+};

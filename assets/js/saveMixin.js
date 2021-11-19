@@ -53,6 +53,7 @@ export const SaveMixin = {
           this.spotify.removeFromMySavedTracks([spotifyId]);
         }
       } else {
+        plausible("Liked", { props: { song: id } });
         this.$store.commit("liked/addLikedItem", id);
 
         if (this.spotify) {

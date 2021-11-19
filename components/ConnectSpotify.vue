@@ -1,5 +1,5 @@
 <template>
-  <a :href="url" class="outer">
+  <a :href="url" class="outer" @click="onClick">
     <span class="spotify">Connect spotify <span class="why">?</span></span>
 
     <div class="explanation">
@@ -17,6 +17,11 @@ export default {
     url: {
       type: String,
       required: true,
+    },
+  },
+  methods: {
+    onClick() {
+      plausible("Spotify Connect", { props: { status: "initiate" } });
     },
   },
 };

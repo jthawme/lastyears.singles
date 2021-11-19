@@ -49,7 +49,7 @@ const run = async () => {
 
   const data = await Promise.all(targetUrls.map((url, idx) => getPage(idx)));
 
-  await runUploadServer(data.flat(), SOURCE.NPR);
+  await runUploadServer(data.flat(), SOURCE.NPR, 2020);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 

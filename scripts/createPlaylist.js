@@ -1,36 +1,32 @@
 require("./bootstrap");
 const jsonfile = require("jsonfile");
 const path = require("path");
-const { getPlaylist, createPlaylist, initialiseSpotify } = require("./spotify");
+const {
+  getPlaylist,
+  createPlaylist,
+  initialiseSpotify,
+  updatePlaylist,
+} = require("./spotify");
 const { NAMES, SOURCE } = require("./constants");
-const { getSongs } = require("./db");
-const year = 2020;
+const { getSongs, reduceSongStructure } = require("./db");
 
 const getPlaylistName = (source) => {
-  return `${NAMES[source]} Top Songs ${year}`;
+  const s = source.split("-");
+  const year = s.splice(s.length - 1, 1);
+
+  const baseName = s.join("-");
+
+  if (!NAMES[baseName]) {
+    throw new Error(`${baseName} has no pretty name`);
+  }
+
+  return `${NAMES[baseName]} Top Songs ${year}`;
 };
 
 const getInitialSongs = async () => {
   const songs = await getSongs();
 
-  const reduced = songs.reduce((prev, curr) => {
-    const { positions, ...rest } = curr;
-
-    positions.forEach((position) => {
-      if (!prev[position.source]) {
-        prev[position.source] = [];
-      }
-
-      prev[position.source].push({
-        ...rest,
-        positions: position.position,
-      });
-    });
-
-    return prev;
-  }, {});
-
-  return reduced;
+  return reduceSongStructure(songs);
 };
 
 const createPlaylistIfNotExist = async (source, items) => {
@@ -39,14 +35,17 @@ const createPlaylistIfNotExist = async (source, items) => {
   const existing = await getPlaylist(playlistName);
 
   if (existing) {
-    console.log(`${playlistName} exists already`);
-    return existing;
+    return updatePlaylist(
+      existing,
+      items,
+      `Listen to all the end of year lists https://lastyears.singles/list/${source}`
+    );
   }
 
   return createPlaylist(
     playlistName,
     items,
-    `Listen to all the end of year lists https://end-of-year-lists.netlify.app/list/${source}`
+    `Listen to all the end of year lists https://lastyears.singles/list/${source}`
   );
 };
 

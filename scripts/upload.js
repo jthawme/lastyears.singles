@@ -10,7 +10,7 @@ const youtubeRegex =
 const spotifyRegex =
   /(https?:\/\/open.spotify.com\/(track|user|artist|album)\/[a-zA-Z0-9]+(\/playlist\/[a-zA-Z0-9]+|)|spotify:(track|user|artist|album):[a-zA-Z0-9]+(:playlist:[a-zA-Z0-9]+|))/;
 
-const runUploadServer = (items, source) => {
+const runUploadServer = (items, source, year) => {
   return new Promise((resolve) => {
     let server = null;
     let itemIdx = 0;
@@ -81,7 +81,7 @@ const runUploadServer = (items, source) => {
           const songRow = await saveSong(spotifyId, youtubeLink);
           id = songRow.id;
         }
-        await saveSearched(id, title, artist, source, position);
+        await saveSearched(id, title, artist, source, position, year);
 
         itemIdx++;
         return res.json({ success: true });
@@ -102,7 +102,7 @@ const runUploadServer = (items, source) => {
   });
 };
 
-const runUpload = (items, source) => {
+const runUpload = (items, source, year) => {
   return new Promise((resolve) => {
     let rows = [];
 
@@ -156,7 +156,7 @@ const runUpload = (items, source) => {
       const spotifyId = answers.spotifyTrack.split("track/").pop();
 
       const songRow = await saveSong(spotifyId, answers.youtubeLink);
-      await saveSearched(songRow.id, title, artist, source, position);
+      await saveSearched(songRow.id, title, artist, source, position, year);
 
       next(idx + 1);
     };

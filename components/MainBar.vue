@@ -175,6 +175,7 @@ export default {
       if (!this.currentInternalSong) {
         return;
       }
+
       this.toggleLikeSong(
         this.currentInternalSong.id,
         this.currentInternalSong.spotify_id

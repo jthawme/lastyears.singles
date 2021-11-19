@@ -1,7 +1,9 @@
-const PROJECT_TITLE = "Music List";
-const PROJECT_DESCRIPTION = "[PROJECT_DESCRIPTION]";
-const PROJECT_KEYWORDS = "Music List"; // add more
-const PROJECT_DOMAIN = "https://musiclist.jthaw.club";
+const PROJECT_TITLE = "Last Years Singles";
+const PROJECT_DESCRIPTION =
+  "Listen to last years greatest songs as decided by the internet's largest reaching music sources";
+const PROJECT_KEYWORDS =
+  "Last Years Singles, End of year list, 2021 best songs, 2021 top songs, top songs, pitchfork top 100"; // add more
+const PROJECT_DOMAIN = "https://lastyears.singles";
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
@@ -10,6 +12,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: PROJECT_TITLE,
+    titleTemplate: `%s - ${PROJECT_TITLE}`,
     meta: [
       { charset: "utf-8" },
       {
@@ -79,6 +82,19 @@ export default {
       { meta: "msapplication-TileImage", content: "/ms-icon-144x144.png" },
       { meta: "theme-color", content: "#ffffff" },
     ],
+    script: [
+      {
+        src: "https://plausible.io/js/plausible.js",
+        ["data-domain"]: "lastyears.singles",
+        defer: true,
+      },
+      {
+        innerHTML: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
+        type: "text/javascript",
+        charset: "utf-8",
+      },
+    ],
+    __dangerouslyDisableSanitizers: ["script", "innerHTML"],
     // link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 

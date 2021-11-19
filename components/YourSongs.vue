@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     playSong(item) {
+      Plausible("Song", { props: { song: item.id, source: "your-songs" } });
       this.$store.commit("player/toggleShouldPlay", true);
       this.$store.commit("queue/createQueue", {
         items: this.songs,

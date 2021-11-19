@@ -120,6 +120,27 @@ const createPlaylist = async (name, uris, description) => {
   }
 };
 
+const updatePlaylist = async (playlist, uris, description) => {
+  try {
+    const spotify = await initialiseSpotify(true);
+
+    await spotify.changePlaylistDetails(playlist.id, {
+      description,
+    });
+    await spotify.replaceTracksInPlaylist(
+      playlist.id,
+      uris.map((u) => `spotify:track:${u}`)
+    );
+
+    return playlist;
+  } catch (e) {
+    console.log(e, handleSpotifyError);
+    return handleSpotifyError(e, true).then(() => {
+      return updatePlaylist(playlist, uris, description);
+    });
+  }
+};
+
 const handleSpotifyError = (e, authCode = false) => {
   if (e.statusCode === 429) {
     const retryAfter = e.headers["retry-after"]
@@ -138,4 +159,10 @@ const handleSpotifyError = (e, authCode = false) => {
   throw new Error(e);
 };
 
-module.exports = { initialiseSpotify, getTrack, getPlaylist, createPlaylist };
+module.exports = {
+  initialiseSpotify,
+  getTrack,
+  getPlaylist,
+  createPlaylist,
+  updatePlaylist,
+};

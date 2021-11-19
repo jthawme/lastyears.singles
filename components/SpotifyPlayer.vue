@@ -32,7 +32,7 @@ export default {
     },
     onSpotifyWebPlaybackSDKReady() {
       this.webPlayer = new Spotify.Player({
-        name: "Music Lists",
+        name: "lastyears.singles",
         getOAuthToken: (cb) => {
           cb(this.spotifyToken);
         },
