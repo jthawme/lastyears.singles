@@ -40,16 +40,25 @@ export const actions = {
   async nuxtServerInit({ commit }, { env }) {
     const sources = [
       ...new Set(
-        allSongs.flatMap((item) => item.positions.map((p) => p.source))
+        allSongs.flatMap((item) =>
+          item.positions.map((p) => `${p.source}-${p.year}`)
+        )
       ),
     ];
 
+    const currentYear = new Date().getFullYear();
     commit(
       "setList",
-      sources.map((s) => ({
-        name: NAMES[s],
-        slug: s,
-      }))
+      sources.map((s) => {
+        const parts = s.split("-");
+        const year = parseInt(parts.splice(parts.length - 1, 1));
+        const baseName = parts.join("-");
+        return {
+          name: NAMES[baseName],
+          year,
+          slug: s,
+        };
+      })
     );
 
     commit("setPlaylists", allPlaylists);
