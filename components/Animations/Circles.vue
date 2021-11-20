@@ -1,5 +1,10 @@
 <template>
-  <Canvas ref="canvas" @mounted="onMount" @resize="onResize" />
+  <Canvas
+    :controlled="false"
+    ref="canvas"
+    @mounted="onMount"
+    @resize="onResize"
+  />
 </template>
 
 <script>

@@ -12,6 +12,7 @@
     <transition name="fade" mode="out-in">
       <squares v-if="isSource('pitchfork') && displayVisual" />
       <circles v-if="isSource('nme') && displayVisual" />
+      <Field v-if="isSource('the-fader') && displayVisual" />
     </transition>
 
     <MainBar />
@@ -32,6 +33,7 @@ import YoutubePlayer from "~/components/YoutubePlayer.vue";
 import SpotifyPlayer from "~/components/SpotifyPlayer.vue";
 import { PLAYER_CONTROL } from "~/store/player";
 import Circles from "~/components/Animations/Circles.vue";
+import Field from "~/components/Animations/Field.vue";
 
 export default {
   components: {
@@ -41,6 +43,7 @@ export default {
     YoutubePlayer,
     SpotifyPlayer,
     Circles,
+    Field,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
