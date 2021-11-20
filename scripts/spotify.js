@@ -41,7 +41,7 @@ const initialiseSpotify = (authCode = false) => {
 
       const server = app.listen(3000, () => {
         var authorizeURL = spotify.createAuthorizeURL(
-          ["playlist-modify-public", "user-read-private"],
+          ["playlist-modify-public", "user-read-private", "ugc-image-upload"],
           "local"
         );
 
@@ -100,7 +100,21 @@ const getPlaylist = async (name) => {
   }
 };
 
-const createPlaylist = async (name, uris, description) => {
+const getFullPlaylist = async (playlistId) => {
+  try {
+    const spotify = await initialiseSpotify(true);
+
+    const data = await spotify.getPlaylist(playlistId);
+
+    return data.body;
+  } catch (e) {
+    return handleSpotifyError(e, true).then(() => {
+      return getPlaylist(name);
+    });
+  }
+};
+
+const createPlaylist = async (name, uris, description, image) => {
   try {
     const spotify = await initialiseSpotify(true);
     const playlist = await spotify
@@ -110,6 +124,7 @@ const createPlaylist = async (name, uris, description) => {
       playlist.id,
       uris.map((u) => `spotify:track:${u}`)
     );
+    await spotify.uploadCustomPlaylistCoverImage(playlist.id, image);
 
     return playlist;
   } catch (e) {
@@ -120,7 +135,7 @@ const createPlaylist = async (name, uris, description) => {
   }
 };
 
-const updatePlaylist = async (playlist, uris, description) => {
+const updatePlaylist = async (playlist, uris, description, image) => {
   try {
     const spotify = await initialiseSpotify(true);
 
@@ -131,6 +146,7 @@ const updatePlaylist = async (playlist, uris, description) => {
       playlist.id,
       uris.map((u) => `spotify:track:${u}`)
     );
+    await spotify.uploadCustomPlaylistCoverImage(playlist.id, image);
 
     return playlist;
   } catch (e) {
@@ -163,6 +179,7 @@ module.exports = {
   initialiseSpotify,
   getTrack,
   getPlaylist,
+  getFullPlaylist,
   createPlaylist,
   updatePlaylist,
 };

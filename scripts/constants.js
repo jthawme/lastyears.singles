@@ -7,6 +7,7 @@ const SOURCE = {
   THE_FADER: "the-fader",
   COMPLEX: "complex",
   TRIPLE_J: "triple-j",
+  BIG_J_THE_WIZARD_KING: "big-j-the-wizard-king",
 };
 
 const NAMES = {
@@ -18,6 +19,7 @@ const NAMES = {
   [SOURCE.THE_FADER]: "The Fader",
   [SOURCE.COMPLEX]: "Complex",
   [SOURCE.TRIPLE_J]: "Triple J",
+  [SOURCE.BIG_J_THE_WIZARD_KING]: "Big J The Wizard King",
 };
 
 module.exports = { SOURCE, NAMES };

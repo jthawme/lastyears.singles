@@ -9,18 +9,28 @@ const {
 } = require("./spotify");
 const { NAMES, SOURCE } = require("./constants");
 const { getSongs, reduceSongStructure } = require("./db");
+const { makeImage } = require("./createPlaylistImage");
 
-const getPlaylistName = (source) => {
+const getPlaylistDetails = (source) => {
   const s = source.split("-");
   const year = s.splice(s.length - 1, 1);
 
   const baseName = s.join("-");
 
-  if (!NAMES[baseName]) {
-    throw new Error(`${baseName} has no pretty name`);
+  return {
+    name: baseName,
+    year,
+  };
+};
+
+const getPlaylistName = (source) => {
+  const { name, year } = getPlaylistDetails(source);
+
+  if (!NAMES[name]) {
+    throw new Error(`${name} has no pretty name`);
   }
 
-  return `${NAMES[baseName]} Top Songs ${year}`;
+  return `${NAMES[name]} Top Songs ${year}`;
 };
 
 const getInitialSongs = async () => {
@@ -30,22 +40,27 @@ const getInitialSongs = async () => {
 };
 
 const createPlaylistIfNotExist = async (source, items) => {
+  const { name, year } = getPlaylistDetails(source);
   const playlistName = getPlaylistName(source);
 
   const existing = await getPlaylist(playlistName);
+
+  const image = await makeImage(name, items.length, year);
 
   if (existing) {
     return updatePlaylist(
       existing,
       items,
-      `Listen to all the end of year lists https://lastyears.singles/list/${source}`
+      `Listen to all the end of year lists https://lastyears.singles/list/${source}`,
+      image
     );
   }
 
   return createPlaylist(
     playlistName,
     items,
-    `Listen to all the end of year lists https://lastyears.singles/list/${source}`
+    `Listen to all the end of year lists https://lastyears.singles/list/${source}`,
+    image
   );
 };
 
@@ -78,4 +93,6 @@ const createPlaylistIfNotExist = async (source, items) => {
   );
 
   console.log(playlists);
+
+  process.exit();
 })();

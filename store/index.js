@@ -9,6 +9,7 @@ export const state = () => {
     displayVisual: true,
     lists: [],
     playlists: {},
+    egoTrip: true,
     breakpoint: {
       [Breakpoint.Desktop]: true,
       [Breakpoint.LargeMobile]: true,

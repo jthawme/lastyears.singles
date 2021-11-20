@@ -38,7 +38,7 @@ export default {
         name: "twitter:card",
         content: "summary_large_image",
       },
-      { name: "twitter:site", content: "@mschfxyz" },
+      { name: "twitter:site", content: "@jthawme" },
       {
         name: "twitter:title",
         content: PROJECT_TITLE,
@@ -49,7 +49,7 @@ export default {
       },
       {
         name: "twitter:image:src",
-        content: `${PROJECT_DOMAIN}/social/sharecard-twitter.png`,
+        content: `${PROJECT_DOMAIN}/social/twitter.png`,
       },
       {
         name: "og:title",
@@ -65,7 +65,7 @@ export default {
       {
         name: "og:image",
         property: "og:image",
-        content: `${PROJECT_DOMAIN}/social/sharecard-facebook.png`,
+        content: `${PROJECT_DOMAIN}/social/facebook.png`,
       },
       {
         name: "og:description",
@@ -77,7 +77,7 @@ export default {
         property: "og:site_name",
         content: PROJECT_TITLE,
       },
-      { name: "author", content: "MSCHF" },
+      { name: "author", content: "Jonny Thaw" },
       { meta: "msapplication-TileColor", content: "#ffffff" },
       { meta: "msapplication-TileImage", content: "/ms-icon-144x144.png" },
       { meta: "theme-color", content: "#ffffff" },
