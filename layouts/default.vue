@@ -13,6 +13,7 @@
       <squares v-if="isSource('pitchfork') && displayVisual" />
       <circles v-if="isSource('nme') && displayVisual" />
       <Field v-if="isSource('the-fader') && displayVisual" />
+      <shift-squares v-if="isSource('billboard') && displayVisual" />
     </transition>
 
     <MainBar />
@@ -34,6 +35,9 @@ import SpotifyPlayer from "~/components/SpotifyPlayer.vue";
 import { PLAYER_CONTROL } from "~/store/player";
 import Circles from "~/components/Animations/Circles.vue";
 import Field from "~/components/Animations/Field.vue";
+import ShiftSquares from "~/components/Animations/ShiftSquares.vue";
+import { getItem } from "~/assets/js/localStorage";
+import { EGO_KEY } from "~/assets/js/constants";
 
 export default {
   components: {
@@ -44,6 +48,7 @@ export default {
     SpotifyPlayer,
     Circles,
     Field,
+    ShiftSquares,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
@@ -54,9 +59,15 @@ export default {
   data() {
     return {
       idleTimer: -1,
+      keyInputs: [],
     };
   },
   mounted() {
+    const ego = getItem(EGO_KEY, true);
+    if (ego) {
+      this.$store.commit("setEgoTrip", true);
+    }
+
     smoothscroll.polyfill();
 
     registerBootlegVH();

@@ -93,6 +93,9 @@ export default {
 }
 
 .back {
+  position: sticky;
+
+  top: var(--page-padding-y);
   color: inherit;
 
   text-decoration: none;

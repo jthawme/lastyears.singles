@@ -1,4 +1,5 @@
 import { SAVED_KEY } from "./constants";
+import { getItem, setItem } from "./localStorage";
 
 export const SavedMixin = {
   mounted() {
@@ -17,7 +18,7 @@ export const SavedMixin = {
         .then((items) => this.$store.commit("liked/setSongs", items));
     },
     getSongs() {
-      const items = localStorage.getItem(SAVED_KEY);
+      const items = getItem(SAVED_KEY);
 
       if (items) {
         try {
@@ -30,7 +31,7 @@ export const SavedMixin = {
   },
   watch: {
     likedSongs(val) {
-      localStorage.setItem(SAVED_KEY, JSON.stringify(val));
+      setItem(SAVED_KEY, JSON.stringify(val));
     },
   },
 };

@@ -16,8 +16,22 @@
 </template>
 
 <script>
+import { listenCb, tickUpdate } from "~/assets/js/utils";
 import TextMutate from "~/components/common/TextMutate.vue";
 import { SOURCE } from "~/scripts/constants";
+
+const KONAMI_CODE = [
+  "ArrowUp",
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowDown",
+  "b",
+  "a",
+  "Enter",
+]
+  .reverse()
+  .join("");
+
 export default {
   head() {
     return {
@@ -30,6 +44,12 @@ export default {
     };
   },
   components: { TextMutate },
+  mounted() {
+    this.unlisten = [];
+    this.unlisten.push(
+      listenCb(document, "keyup", tickUpdate(this.codeChecker.bind(this)))
+    );
+  },
   computed: {
     playing() {
       return this.$store.state.player.playing;
@@ -53,12 +73,19 @@ export default {
 
       const entries = Object.entries(years);
       entries.sort((a, b) => b[0] - a[0]);
-      return entries;
+      return entries.filter((row) => row[1].length);
     },
   },
   methods: {
     notCurrent(year) {
       return parseInt(year) !== new Date().getFullYear();
+    },
+    codeChecker(e) {
+      this.keyInputs = [e.key, ...this.keyInputs].slice(0, 7);
+
+      if (this.keyInputs.join("") === KONAMI_CODE) {
+        this.$store.commit("setEgoTrip", true);
+      }
     },
   },
 };

@@ -160,3 +160,7 @@ export const randomBetween = (min, max) => {
 export const deg2rad = (angle) => {
   return angle * (Math.PI / 180);
 };
+
+export const lerp = (v0, v1, t) => {
+  return v0 * (1 - t) + v1 * t;
+};

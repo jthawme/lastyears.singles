@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import queryString from "query-string";
 import { PLAYER_CONTROL } from "~/store/player";
 import { ACCESS_TOKEN_KEY, STATE_KEY } from "./constants";
+import { getItem, setItem } from "./localStorage";
 import { getSpotify, getSpotifyAuthoriseUrl } from "./spotify";
 
 export const SpotifyMixin = {
@@ -40,7 +41,7 @@ export const SpotifyMixin = {
      * @returns {Promise<boolean>}
      */
     getPreviousToken() {
-      const prevToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+      const prevToken = getItem(ACCESS_TOKEN_KEY);
 
       if (prevToken) {
         const [expires, token] = prevToken.split(":");
@@ -75,7 +76,7 @@ export const SpotifyMixin = {
           `${window.location.origin}${window.location.pathname}`
         );
 
-        const prevStateToken = localStorage.getItem(STATE_KEY);
+        const prevStateToken = getItem(STATE_KEY);
 
         if (state && access_token && expires_in && state === prevStateToken) {
           plausible("Spotify Connect", { props: { status: "completed" } });
@@ -107,7 +108,7 @@ export const SpotifyMixin = {
      * If not logged in setup the scene to allow for the authorisation URL
      */
     setupAuthorise() {
-      localStorage.setItem(STATE_KEY, this.stateToken);
+      setItem(STATE_KEY, this.stateToken);
       this.$store.commit(
         "spotify/setSpotifyAuthoriseUrl",
         getSpotifyAuthoriseUrl(this.stateToken)

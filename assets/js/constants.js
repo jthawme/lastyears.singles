@@ -1,3 +1,4 @@
-export const ACCESS_TOKEN_KEY = "lists-token";
-export const STATE_KEY = "lists-state";
-export const SAVED_KEY = "lists-saved";
+export const ACCESS_TOKEN_KEY = "token";
+export const STATE_KEY = "state";
+export const SAVED_KEY = "saved";
+export const EGO_KEY = "ego";

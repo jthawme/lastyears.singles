@@ -1,9 +1,10 @@
 import Spotify from "spotify-web-api-js";
 import queryString from "query-string";
 import { ACCESS_TOKEN_KEY } from "./constants";
+import { setItem } from "./localStorage";
 
 export const getSpotify = (token, expires) => {
-  localStorage.setItem(ACCESS_TOKEN_KEY, `${expires}:${token}`);
+  setItem(ACCESS_TOKEN_KEY, `${expires}:${token}`);
 
   const s = new Spotify();
   s.setAccessToken(token);

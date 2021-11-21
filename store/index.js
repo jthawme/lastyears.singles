@@ -1,3 +1,5 @@
+import { EGO_KEY } from "~/assets/js/constants";
+import { setItem } from "~/assets/js/localStorage";
 import { Breakpoint } from "~/assets/js/mixins/breakpoints";
 import { NAMES } from "~/scripts/constants";
 import allSongs from "~/static/all.json";
@@ -9,7 +11,7 @@ export const state = () => {
     displayVisual: true,
     lists: [],
     playlists: {},
-    egoTrip: true,
+    egoTrip: false,
     breakpoint: {
       [Breakpoint.Desktop]: true,
       [Breakpoint.LargeMobile]: true,
@@ -34,6 +36,10 @@ export const mutations = {
   },
   setPlaylists(state, playlists) {
     state.playlists = { ...playlists };
+  },
+  setEgoTrip(state, val) {
+    state.egoTrip = val;
+    setItem(EGO_KEY, true);
   },
 };
 
