@@ -39,6 +39,8 @@ import ShiftSquares from "~/components/Animations/ShiftSquares.vue";
 import { getItem } from "~/assets/js/localStorage";
 import { EGO_KEY } from "~/assets/js/constants";
 
+const SITE_TITLE = "Last Years Singles";
+
 export default {
   components: {
     MainBar,
@@ -52,14 +54,20 @@ export default {
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
+    const playing = this.playing;
     return {
       title: this.title,
+      titleTemplate: (titleChunk) => {
+        // If undefined or blank then we don't need the hyphen
+        return titleChunk && titleChunk !== SITE_TITLE
+          ? `${playing ? "🎵 " : ""}${titleChunk} - ${SITE_TITLE}`
+          : `${playing ? "🎵 " : ""}${SITE_TITLE}`;
+      },
     };
   },
   data() {
     return {
       idleTimer: -1,
-      keyInputs: [],
     };
   },
   mounted() {

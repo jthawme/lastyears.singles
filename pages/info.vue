@@ -19,7 +19,7 @@ import YourSongs from "../components/YourSongs.vue";
 export default {
   head() {
     return {
-      title: `${this.playing ? "🎵" : ""} Info`,
+      title: `Info`,
     };
   },
   components: { YourSongs, About, Mosaic },

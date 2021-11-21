@@ -33,14 +33,15 @@ const KONAMI_CODE = [
   .join("");
 
 export default {
-  head() {
-    return {
-      title: `${this.playing ? "🎵" : ""} Choose`,
-    };
-  },
+  // head() {
+  //   return {
+  //     title: `${this.playing ? "🎵" : null}`,
+  //   };
+  // },
   data() {
     return {
       displayYears: true,
+      keyInputs: [],
     };
   },
   components: { TextMutate },

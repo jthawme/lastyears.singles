@@ -37,7 +37,7 @@ export default {
     const baseName = parts.join("-");
 
     return {
-      title: `${this.playing ? "🎵" : ""}${NAMES[baseName]}${
+      title: `${NAMES[baseName]}${
         year !== new Date().getFullYear() ? ` (${year})` : ""
       }`,
     };
