@@ -4,7 +4,12 @@
       <Markdown :content="message" />
 
       <div v-if="action" class="action">
-        <a :href="action.to" target="_blank" class="action-item">
+        <a
+          :href="action.to"
+          target="_blank"
+          class="action-item"
+          @click="onClickAction"
+        >
           {{ action.label }}
         </a>
       </div>
@@ -17,7 +22,7 @@
 </template>
 
 <script>
-import { timer } from "~/assets/js/utils";
+import { listenCb } from "~/assets/js/utils";
 import { TOAST_TYPE } from "~/store/toast";
 
 export default {
@@ -55,10 +60,19 @@ export default {
         this.onRemove();
       }, this.duration);
     }
+
+    listenCb(document, "keyup", (e) => {
+      if (e.key === "Escape") {
+        this.onRemove();
+      }
+    });
   },
   methods: {
     onRemove() {
       this.$emit("remove", this.id);
+    },
+    onClickAction() {
+      this.$store.commit("player/toggleShouldPlay", false);
     },
   },
 };

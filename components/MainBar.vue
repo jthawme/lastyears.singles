@@ -71,6 +71,7 @@
 import { SaveMixin } from "~/assets/js/saveMixin";
 import { PLAYER_CONTROL } from "~/store/player";
 import SpotifyLogo from "~/assets/img/spotify-icon.svg?inline";
+import { listenCb } from "~/assets/js/utils";
 
 export default {
   components: { SpotifyLogo },
@@ -158,6 +159,9 @@ export default {
       return this.$store.state.queue.position > 0;
     },
   },
+  mounted() {
+    listenCb(document, "keyup", this.onKeyUp.bind(this));
+  },
   methods: {
     toggleDisplayVisual() {
       this.$store.commit("toggleDisplayVisual", !this.displayVisual);
@@ -180,6 +184,19 @@ export default {
         this.currentInternalSong.id,
         this.currentInternalSong.spotify_id
       );
+    },
+    onKeyUp(e) {
+      switch (e.key) {
+        case " ":
+          this.togglePlaying();
+          break;
+        case "ArrowLeft":
+          this.prev();
+          break;
+        case "ArrowRight":
+          this.next();
+          break;
+      }
     },
   },
 };
@@ -261,6 +278,7 @@ aside {
 
       .column-inner {
         bottom: 30px;
+        color: var(--color-text);
       }
     }
   }

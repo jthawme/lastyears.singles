@@ -12,17 +12,25 @@ export const state = () => {
 };
 
 export const mutations = {
-  addToast(state, { message, type = TOAST_TYPE.GENERAL, action, duration }) {
+  addToast(
+    state,
+    { message, type = TOAST_TYPE.GENERAL, action, duration, callback }
+  ) {
+    const id = nanoid();
     state.items = [
       ...state.items,
       {
-        id: nanoid(),
+        id,
         message,
         type,
         action,
         duration,
       },
     ];
+
+    if (callback) {
+      callback(id);
+    }
   },
   removeToast(state, id) {
     state.items.splice(

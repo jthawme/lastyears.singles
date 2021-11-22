@@ -14,6 +14,7 @@
       <circles v-if="isSource('nme') && displayVisual" />
       <Field v-if="isSource('the-fader') && displayVisual" />
       <shift-squares v-if="isSource('billboard') && displayVisual" />
+      <Ticking v-if="isSource('npr') && displayVisual" />
     </transition>
 
     <MainBar />
@@ -46,6 +47,7 @@ import ShiftSquares from "~/components/Animations/ShiftSquares.vue";
 import { getItem } from "~/assets/js/localStorage";
 import { EGO_KEY } from "~/assets/js/constants";
 import Toast from "~/components/common/Toast.vue";
+import Ticking from "~/components/Animations/Ticking.vue";
 
 const SITE_TITLE = "Last Years Singles";
 
@@ -60,6 +62,7 @@ export default {
     Field,
     ShiftSquares,
     Toast,
+    Ticking,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {

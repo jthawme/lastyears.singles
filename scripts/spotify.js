@@ -52,7 +52,7 @@ const initialiseSpotify = (authCode = false) => {
     const spotify = new SpotifyWebApi({
       clientId: process.env.SPOTIFY_BACKEND_CLIENT_ID,
       clientSecret: process.env.SPOTIFY_BACKEND_CLIENT_SECRET,
-      redirectUri: "http://www.example.com/callback",
+      redirectUri: "http://localhost:3000/callback",
     });
 
     return spotify.clientCredentialsGrant().then((data) => {
@@ -128,7 +128,6 @@ const createPlaylist = async (name, uris, description, image) => {
 
     return playlist;
   } catch (e) {
-    console.log(e, handleSpotifyError);
     return handleSpotifyError(e, true).then(() => {
       return createPlaylist(name, uris, description);
     });
@@ -150,7 +149,6 @@ const updatePlaylist = async (playlist, uris, description, image) => {
 
     return playlist;
   } catch (e) {
-    console.log(e, handleSpotifyError);
     return handleSpotifyError(e, true).then(() => {
       return updatePlaylist(playlist, uris, description);
     });

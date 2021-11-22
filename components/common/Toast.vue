@@ -8,32 +8,17 @@
 import ToastItem from "./ToastItem.vue";
 export default {
   components: { ToastItem },
-  data() {
-    return {
-      internalItems: [],
-    };
-  },
   computed: {
     items() {
       return this.$store.state.toast.items;
     },
     currentItem() {
-      return this.internalItems[0];
-    },
-  },
-  watch: {
-    items(val) {
-      if (val.length) {
-        const newItem = val[0];
-        this.$store.commit("toast/removeToast", newItem.id);
-        this.internalItems = [newItem, ...this.internalItems];
-      }
+      return this.items[0];
     },
   },
   methods: {
     onRemove(id) {
-      const idx = this.internalItems.findIndex((item) => item.id === id);
-      this.internalItems.splice(idx, 1);
+      this.$store.commit("toast/removeToast", id);
     },
   },
 };

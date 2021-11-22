@@ -15,6 +15,13 @@ const getSearched = async (title, artist, source) => {
   return result;
 };
 
+const getSongById = async (id) => {
+  return knex("song")
+    .where({ id })
+    .first()
+    .then((res) => res);
+};
+
 const getSongBySpotify = async (spotifyId) => {
   return knex("song")
     .where({ spotify_id: spotifyId })
@@ -33,6 +40,7 @@ const saveSong = async (spotifyId, youtubeLink) => {
       youtube_link: youtubeLink,
       artists: track.artists.map((artist) => artist.name).join("!@!"),
       title: track.name,
+      preview: track.preview_url,
     };
 
     return knex("song")
@@ -44,6 +52,18 @@ const saveSong = async (spotifyId, youtubeLink) => {
   }
 
   return song;
+};
+
+const updateSongPreview = async (songId) => {
+  const song = await getSongById(songId);
+  const track = await getTrack(song.spotify_id);
+
+  return knex("song")
+    .update({
+      preview: track.preview_url,
+    })
+    .where({ id: songId })
+    .then(() => ({ ...song, preview: track.preview_url }));
 };
 
 const saveSearched = async (songId, title, artist, source, position, year) => {
@@ -110,4 +130,5 @@ module.exports = {
   saveSearched,
   getSongs,
   reduceSongStructure,
+  updateSongPreview,
 };
