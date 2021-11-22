@@ -116,7 +116,12 @@ export default {
 
   buildModules: ["@nuxtjs/svg", "@nuxtjs/style-resources"],
 
-  modules: ["@nuxtjs/pwa", "@nuxt/http"],
+  modules: ["@nuxtjs/pwa", "@nuxt/http", "@nuxtjs/markdownit"],
+
+  markdownit: {
+    injected: true,
+    html: true,
+  },
 
   pwa: {
     manifest: {

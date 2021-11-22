@@ -93,6 +93,11 @@ export default {
             onError: this.onPlayerError,
           },
         });
+      } else if (!this.ready) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+          this.loadOrCreate();
+        }, 250);
       } else {
         this.player.loadVideoById(this.videoId);
       }

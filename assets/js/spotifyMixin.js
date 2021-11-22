@@ -81,6 +81,10 @@ export const SpotifyMixin = {
         if (state && access_token && expires_in && state === prevStateToken) {
           plausible("Spotify Connect", { props: { status: "completed" } });
 
+          this.$store.commit("toast/addToast", {
+            message: "Successfully connected to spotify, happy listening!",
+          });
+
           this.setToken(
             access_token.toString(),
             Date.now() + parseFloat(expires_in.toString()) * 1000

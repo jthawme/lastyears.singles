@@ -17,13 +17,20 @@
     </transition>
 
     <MainBar />
+
+    <Toast />
   </div>
 </template>
 
 
 <script>
 import smoothscroll from "smoothscroll-polyfill";
-import { listenCb, registerBootlegVH, tickUpdate } from "../assets/js/utils";
+import {
+  listenCb,
+  registerBootlegVH,
+  tickUpdate,
+  timer,
+} from "../assets/js/utils";
 import { SpotifyMixin } from "../assets/js/spotifyMixin";
 import { SavedMixin } from "../assets/js/saveMixin";
 import { BreakPointSet } from "../assets/js/mixins/breakpoints";
@@ -38,6 +45,7 @@ import Field from "~/components/Animations/Field.vue";
 import ShiftSquares from "~/components/Animations/ShiftSquares.vue";
 import { getItem } from "~/assets/js/localStorage";
 import { EGO_KEY } from "~/assets/js/constants";
+import Toast from "~/components/common/Toast.vue";
 
 const SITE_TITLE = "Last Years Singles";
 
@@ -51,6 +59,7 @@ export default {
     Circles,
     Field,
     ShiftSquares,
+    Toast,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {

@@ -8,6 +8,7 @@
         :key="song.id"
         v-bind="song"
         @click.native="() => playSong(song)"
+        class="item"
       />
     </div>
     <div class="pool-empty" v-else>
@@ -72,5 +73,9 @@ export default {
   @include desktop {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.item {
+  min-width: 0;
 }
 </style>

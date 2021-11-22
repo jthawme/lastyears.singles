@@ -20,6 +20,7 @@
 import getYouTubeID from "get-youtube-id";
 import Youtube from "./common/Youtube.vue";
 import { timer } from "~/assets/js/utils";
+import { TOAST_TYPE } from "~/store/toast";
 
 export default {
   components: { Youtube },
@@ -48,8 +49,17 @@ export default {
     onError(e) {
       console.log(e);
     },
-    onUnable() {
-      console.log("unable");
+    async onUnable() {
+      this.$store.commit("toast/addToast", {
+        type: TOAST_TYPE.ERROR,
+        message: `Some songs are unfortunately not able to be played embedded on this site.\n\nConnect to spotify to listen to all of the songs seamlessly.`,
+        action: {
+          to: `https://youtube.com/watch?v=${this.videoId}`,
+          label: `Open '${this.currentSong.title}' on Youtube ⟶`,
+        },
+        duration: 4000,
+      });
+      await timer(4000);
       this.next();
     },
     onEnd() {
@@ -60,7 +70,7 @@ export default {
     },
     checkGuard() {
       return new Promise((resolve) => {
-        if (this.$refs.youtube) {
+        if (this.$refs.youtube && this.$refs.youtube.ready) {
           resolve();
           return;
         }
@@ -87,9 +97,12 @@ export default {
     position() {
       return this.$store.state.queue.position;
     },
+    currentSong() {
+      return this.queue[this.position];
+    },
     videoId() {
-      return this.queue.length
-        ? getYouTubeID(this.queue[this.position].youtube_link)
+      return this.currentSong
+        ? getYouTubeID(this.currentSong.youtube_link)
         : false;
     },
     player() {
