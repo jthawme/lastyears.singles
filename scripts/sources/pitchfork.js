@@ -1,4 +1,4 @@
-require("./bootstrap");
+require("../bootstrap");
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 const { runUpload, runUploadServer } = require("../upload");

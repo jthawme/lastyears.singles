@@ -49,9 +49,15 @@ export default {
     },
     onPlayerReady() {
       this.ready = true;
+
+      // Do this in case the initial video is unable. It doesnt report it as an error
+      this.checkTimer = setTimeout(() => {
+        this.$emit("unable");
+      }, 5000);
     },
     onPlayerStateChange(event) {
       clearTimeout(this.timeUpdateId);
+      clearTimeout(this.checkTimer);
 
       if (event.data == this.YT.PlayerState.PLAYING) {
         this.updateTime();

@@ -51,11 +51,16 @@ export default {
 
 <style lang="scss" scoped>
 .outer {
-  // margin-top: 4em;
+  // color: var(--color-bg);
+  margin: 8em 0;
+  border: 2px solid var(--color-text);
+
+  // background-color: var(--color-text);
+
+  padding: calc(var(--page-padding-x) / 2);
 
   h2 {
-    margin: 4em 0;
-
+    margin: 0 0 4em;
     font-size: var(--font-size-normal);
   }
 }

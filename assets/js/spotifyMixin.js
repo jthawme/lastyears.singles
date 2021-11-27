@@ -32,6 +32,10 @@ export const SpotifyMixin = {
 
       if (profile.product === "premium") {
         this.$store.commit("player/setPlayerControl", PLAYER_CONTROL.SPOTIFY);
+      } else {
+        this.$store.commit("toast/addToast", {
+          message: "Unfortunately only Spotify Premium accounts work :(",
+        });
       }
     },
 

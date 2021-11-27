@@ -124,8 +124,15 @@ export default {
   },
 
   pwa: {
+    meta: {
+      theme_color: "#FFD98F",
+    },
     manifest: {
       lang: "en",
+      name: "Last Years Singles",
+      short_name: "Singles",
+      description: PROJECT_DESCRIPTION,
+      background_color: "#272727",
     },
   },
 

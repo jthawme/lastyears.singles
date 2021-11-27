@@ -29,6 +29,10 @@ export const mutations = {
   togglePlay(state, val) {
     state.playing = val;
   },
+  forcePlayState(state, val) {
+    state.shouldPlay = val;
+    state.playing = val;
+  },
   setSongDetails(state, val) {
     state.song = val;
   },

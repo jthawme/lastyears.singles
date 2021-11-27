@@ -188,12 +188,15 @@ export default {
     onKeyUp(e) {
       switch (e.key) {
         case " ":
+          e.preventDefault();
           this.togglePlaying();
           break;
         case "ArrowLeft":
+          e.preventDefault();
           this.prev();
           break;
         case "ArrowRight":
+          e.preventDefault();
           this.next();
           break;
       }

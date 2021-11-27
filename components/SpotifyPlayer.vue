@@ -1,4 +1,6 @@
 <script>
+import { getSpotifyAuthoriseUrl } from "~/assets/js/spotify";
+import { listenCb } from "~/assets/js/utils";
 const STATUS = {
   READY: "ready",
   OFFLINE: "offline",
@@ -10,16 +12,19 @@ export default {
   },
   data() {
     return {
+      debug: false,
       deviceId: null,
       currentlyPlaying: null,
     };
   },
   mounted() {
+    this.debug = window.location.host.includes("localhost");
     this.mountPlayerSdk();
     this.getCurrent();
   },
   methods: {
     mountPlayerSdk() {
+      this.log("[Running] mountPlayerSdk");
       if (!document.querySelector("#playersdk")) {
         window.onSpotifyWebPlaybackSDKReady =
           this.onSpotifyWebPlaybackSDKReady.bind(this);
@@ -31,6 +36,7 @@ export default {
       }
     },
     onSpotifyWebPlaybackSDKReady() {
+      this.log("[Running] onSpotifyWebPlaybackSDKReady");
       this.webPlayer = new Spotify.Player({
         name: "lastyears.singles",
         getOAuthToken: (cb) => {
@@ -52,18 +58,41 @@ export default {
         };
       });
 
+      this.webPlayer.addListener("autoplay_failed", () => {
+        console.log("Autoplay is not allowed by the browser autoplay rules");
+
+        const unlisten = listenCb(document, "click", () => {
+          this.webPlayer.activateElement();
+          unlisten();
+        });
+      });
+
+      this.webPlayer.on("authentication_error", () => {
+        this.$store.commit("toast/addToast", {
+          message: "Connection to spotify failed, connect again to continue!",
+          action: {
+            to: this.$store.state.spotify.spotifyAuthoriseUrl,
+            label: "Connect Spotify",
+          },
+        });
+      });
+
       this.webPlayer.connect();
     },
     onTime(percentage) {
+      this.log("[Running] onTime");
       this.$store.commit("player/setPlayerPercentage", percentage);
     },
     onPlaying() {
+      this.log("[Running] onPlaying");
       this.$store.commit("player/togglePlay", true);
     },
     onPause() {
+      this.log("[Running] onPause");
       this.$store.commit("player/togglePlay", false);
     },
     async getDeviceId() {
+      this.log("[Running] getDeviceId");
       const { devices } = await this.spotify.getMyDevices();
 
       if (this.deviceId) {
@@ -98,12 +127,17 @@ export default {
       return this.deviceId;
     },
     async getLocalPlayerState() {
+      this.log("[Running] getLocalPlayerState");
       return this.webPlayer.getCurrentState();
     },
     async playSong(song) {
-      console.log("running this here! 222");
+      this.log("[Running] playSong");
       if (!this.playlistUri && this.source !== "your-songs") {
         return;
+      }
+
+      if (this.needsUpdating) {
+        this.$store.commit("queue/setNeedsUpdating", false);
       }
 
       const deviceId = await this.getDeviceId();
@@ -129,22 +163,59 @@ export default {
       this.getCurrent();
     },
     async play() {
-      console.log("running this here!");
+      this.log("[Running] play");
       await this.spotify.play();
       this.getCurrent();
     },
     async pause() {
+      this.log("[Running] pause");
       await this.spotify.pause();
     },
     async getCurrent() {
+      // this.log("[SD][Running] getCurrent");
+
       clearTimeout(this.updateTimer);
 
       try {
         const { is_playing, item, progress_ms, context } =
           await this.spotify.getMyCurrentPlaybackState();
 
-        if (!context || context.uri !== this.playlistUri) {
-          this.$store.commit("queue/resetQueue");
+        // this.log("[SD] queue context", context, this.playlistUri);
+
+        if (
+          (!context || context.uri !== this.playlistUri) &&
+          !this.needsUpdating
+        ) {
+          let reset = true;
+
+          if (context && context.uri) {
+            const activeSource = this.getActivePlaylist(context.uri);
+            this.log("active source", activeSource, `/${activeSource}.json`);
+
+            if (activeSource) {
+              this.log("should be doing this?");
+              const items = await this.$http.$get(`/${activeSource}.json`);
+              this.log("new queue", {
+                source: activeSource,
+                items,
+                position: items.findIndex(
+                  (newItem) => newItem.spotify_id === item.id
+                ),
+              });
+              this.$store.commit("queue/createQueue", {
+                source: activeSource,
+                items,
+                position: items.findIndex(
+                  (newItem) => newItem.spotify_id === item.id
+                ),
+              });
+              reset = false;
+            }
+          }
+
+          if (reset) {
+            this.$store.commit("queue/resetQueue");
+          }
         }
 
         if (!item) {
@@ -152,10 +223,13 @@ export default {
         }
 
         this.currentlyPlaying = item.id;
-        const playingIndex = this.queue.findIndex(
-          (row) => row.spotify_id === item.id
-        );
-        this.$store.commit("queue/setQueuePosition", playingIndex);
+
+        if (this.queue.length) {
+          const playingIndex = this.queue.findIndex(
+            (row) => row.spotify_id === item.id
+          );
+          this.$store.commit("queue/setQueuePosition", playingIndex);
+        }
 
         this.$store.commit("player/setSongDetails", {
           id: this.songs.find((row) => row.spotify_id === item.id)?.id || -1,
@@ -164,8 +238,7 @@ export default {
           spotify_id: item.id,
         });
 
-        this.$store.commit("player/togglePlay", is_playing);
-        this.$store.commit("player/toggleShouldPlay", is_playing);
+        this.$store.commit("player/forcePlayState", is_playing);
         this.$store.commit(
           "player/setPlayerPercentage",
           progress_ms / item.duration_ms
@@ -175,7 +248,17 @@ export default {
           this.updateTimer = setTimeout(() => this.getCurrent(), 2000);
         }
       } catch (e) {
-        console.error("Get current error", e);
+        console.error("[SD] Get current error", e);
+      }
+    },
+    getActivePlaylist(uri) {
+      return Object.keys(this.playlists).find(
+        (key) => this.playlists[key] === uri
+      );
+    },
+    log(...args) {
+      if (this.debug) {
+        console.log(`[SD]`, ...args);
       }
     },
   },
@@ -190,7 +273,11 @@ export default {
       return this.$store.state.queue.source;
     },
     playlistUri() {
+      this.log("[Computed] playlistUri", this.source);
       return this.playlists[this.source] || false;
+    },
+    needsUpdating() {
+      return this.$store.state.queue.needsUpdating;
     },
 
     shouldPlay() {
@@ -220,7 +307,8 @@ export default {
   },
   watch: {
     shouldPlay(val) {
-      if (!this.currentlyPlaying) {
+      this.log("[WATCH] shouldPlay", val, val !== this.playing);
+      if (val === this.playing || !this.currentlyPlaying) {
         return;
       }
       if (val) {
@@ -229,11 +317,13 @@ export default {
         this.pause();
       }
     },
+
     position(val) {
+      this.log("[WATCH] position", val);
       if (
         typeof val !== "undefined" &&
         val >= 0 &&
-        this.queue[val].id !== this.currentlyPlaying
+        this.queue[val].spotify_id !== this.currentlyPlaying
       ) {
         this.playSong(this.queue[val]);
       }

@@ -3,6 +3,7 @@ export const state = () => {
     position: -1,
     source: null,
     items: [],
+    needsUpdating: false,
   };
 };
 
@@ -12,13 +13,20 @@ export const mutations = {
     state.source = null;
     state.items = [];
   },
-  createQueue(state, { items, source, position }) {
+  createQueue(state, { items, source, position, needsUpdating }) {
     if (state.source !== source) {
       state.items = items.slice();
       state.source = source;
     }
 
     state.position = position;
+
+    if (needsUpdating) {
+      state.needsUpdating = needsUpdating;
+    }
+  },
+  setNeedsUpdating(state, val) {
+    state.needsUpdating = val;
   },
   setQueuePosition(state, position) {
     state.position = position;

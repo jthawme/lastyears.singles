@@ -1,4 +1,5 @@
 import "regenerator-runtime/runtime";
+import { fuzzy } from "fast-fuzzy";
 
 const prep = (txt) =>
   txt
@@ -70,9 +71,7 @@ const createCurrent = (item) => {
     console.log(result);
 
     if (result.success) {
-      getAll().then(() => {
-        getNext();
-      });
+      getNext();
     }
   });
 };
@@ -90,9 +89,11 @@ const addSong = (item) => {
   el.classList.add("song");
   el.id = `song-${item.id}`;
 
-  el.innerHTML = `<h4>${item.title}</h4><h5>${item.artists.join(
-    ", "
-  )}</h5><button data-id="${item.id}">Use this</button>`;
+  el.innerHTML = `<h4>${item.title} (${item.match.toFixed(
+    1
+  )})</h4><h5>${item.artists.join(", ")}</h5><button data-id="${
+    item.id
+  }">Use this</button>`;
 
   document.querySelector(".pool").appendChild(el);
 
@@ -102,10 +103,22 @@ const addSong = (item) => {
   });
 };
 
-async function getAll() {
+async function getAll(nextSong) {
   const data = await fetch("/api/all").then((resp) => resp.json());
 
-  data.songs.forEach((item) => {
+  const songs = data.songs.slice().map((row) => {
+    const titleMatch = fuzzy(nextSong.title, row.title);
+    return {
+      ...row,
+      match: titleMatch,
+    };
+  });
+
+  songs.sort((a, b) => {
+    return b.match - a.match;
+  });
+
+  songs.forEach((item) => {
     addSong(item);
   });
 }
@@ -114,9 +127,8 @@ async function getNext() {
 
   if (data.item) {
     createCurrent(data.item);
+    getAll(data.item);
   }
 }
 
-getAll().then(() => {
-  getNext();
-});
+getNext();

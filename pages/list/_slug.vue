@@ -50,6 +50,7 @@ export default {
         items: this.items,
         source: this.source,
         position: this.items.findIndex((i) => i.id === item.id),
+        needsUpdating: true,
       });
       this.$store.commit("player/setSongDetails", {
         id: item.id,

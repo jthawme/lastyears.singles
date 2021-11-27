@@ -22,7 +22,12 @@
 
       <p>
         The site was made in valuable free time when I should have been
-        relaxing. Made by jthaw.me. Get the site’s code on github here.
+        relaxing. Made by
+        <a href="https://jthaw.me" target="_blank">jthaw.me</a>. Get the site’s
+        code on github
+        <a href="https://github.com/jthawme/lastyears.singles" target="_blank"
+          >here</a
+        >.
       </p>
 
       <p>Do the Konami code on the home page for an easter ego (not a typo).</p>
@@ -46,6 +51,10 @@ export default {};
   .content {
     p {
       margin: 0 0 1em;
+
+      a {
+        color: var(--color-active);
+      }
     }
   }
 }

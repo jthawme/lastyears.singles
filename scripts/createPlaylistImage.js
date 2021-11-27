@@ -51,11 +51,11 @@ const makeImage = async (source, songsLength, year) => {
   const w = (perc) => WIDTH * perc;
   const h = (perc) => WIDTH * perc;
 
-  // Draw cat with lime helmet
-  const img = await loadImage(path.join(__dirname, "public/images/bg.png"));
+  const img = await loadImage(path.join(__dirname, "public/images/bg-alt.png"));
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = `#b7babb`;
+  // ctx.fillStyle = `#b7babb`;
+  ctx.fillStyle = `#272727`;
   ctx.textBaseline = "top";
   ctx.font = `${w(0.1)}px GT Cinetype`;
 
