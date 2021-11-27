@@ -9,6 +9,11 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: "static",
 
+  server: {
+    port: 3000,
+    host: process.env.MOBILE ? "0.0.0.0" : "localhost",
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: PROJECT_TITLE,

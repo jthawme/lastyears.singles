@@ -4,14 +4,14 @@
       <Markdown :content="message" />
 
       <div v-if="action" class="action">
-        <a
-          :href="action.to"
-          target="_blank"
+        <component
+          :is="actionComponent"
+          v-bind="actionProps"
           class="action-item"
-          @click="onClickAction"
+          @click.native="onClickAction"
         >
           {{ action.label }}
-        </a>
+        </component>
       </div>
     </div>
 
@@ -54,6 +54,27 @@ export default {
       },
     },
   },
+  computed: {
+    actionComponent() {
+      return this.action && !this.action.to.startsWith("http")
+        ? "nuxt-link"
+        : "a";
+    },
+    actionProps() {
+      if (!this.action) {
+        return {};
+      }
+
+      return this.actionComponent === "nuxt-link"
+        ? {
+            to: this.action.to,
+          }
+        : {
+            href: this.action.to,
+            target: "_blank",
+          };
+    },
+  },
   async mounted() {
     if (this.duration > 0) {
       this.timer = setTimeout(() => {
@@ -72,7 +93,9 @@ export default {
       this.$emit("remove", this.id);
     },
     onClickAction() {
-      this.$store.commit("player/toggleShouldPlay", false);
+      if (this.action && this.action.callback) {
+        this.action.callback();
+      }
     },
   },
 };

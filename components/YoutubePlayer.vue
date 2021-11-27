@@ -74,6 +74,9 @@ export default {
         action: {
           to: `https://youtube.com/watch?v=${this.videoId}`,
           label: `Open '${truncate(this.currentSong.title)}' on Youtube ⟶`,
+          callback: () => {
+            this.$store.commit("player/toggleShouldPlay", false);
+          },
         },
         duration,
         callback: (id) => {

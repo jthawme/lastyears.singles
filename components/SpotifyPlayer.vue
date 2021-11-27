@@ -46,6 +46,18 @@ export default {
       });
 
       this.webPlayer.addListener("ready", ({ device_id }) => {
+        // weird no audio fix
+        const iframe = document.querySelector(
+          'iframe[src="https://sdk.scdn.co/embedded/index.html"]'
+        );
+
+        if (iframe) {
+          iframe.style.display = "block";
+          iframe.style.position = "absolute";
+          iframe.style.top = "-1000px";
+          iframe.style.left = "-1000px";
+        }
+
         this.internalDevice = {
           id: device_id,
           status: STATUS.READY,

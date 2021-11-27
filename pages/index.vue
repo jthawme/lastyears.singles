@@ -85,6 +85,20 @@ export default {
       this.keyInputs = [e.key, ...this.keyInputs].slice(0, 7);
 
       if (this.keyInputs.join("") === KONAMI_CODE) {
+        let egoToast = null;
+        this.$store.commit("toast/addToast", {
+          message: "Awesome, you've unlocked my hottest songs of 2021, enjoy.",
+          action: {
+            to: `/list/big-j-the-wizard-king-2021`,
+            label: "Listen now",
+            callback: () => {
+              this.$store.commit("toast/removeToast", egoToast);
+            },
+          },
+          callback: (id) => {
+            egoToast = id;
+          },
+        });
         this.$store.commit("setEgoTrip", true);
       }
     },

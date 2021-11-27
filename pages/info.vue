@@ -37,14 +37,19 @@ export default {
 }
 
 .largeness {
-  display: block;
+  display: flex;
 
   font-size: 24vw;
   line-height: 0.9;
 
   margin: 0 -1vw;
 
+  height: calc(100vh - 140px);
+  align-items: center;
+  justify-content: center;
+
   @include tablet {
+    height: auto;
     font-size: 17vw;
   }
 }
