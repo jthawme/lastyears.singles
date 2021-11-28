@@ -46,6 +46,7 @@ export default {
       });
 
       this.webPlayer.addListener("ready", ({ device_id }) => {
+        console.log("waddup g");
         // weird no audio fix
         const iframe = document.querySelector(
           'iframe[src="https://sdk.scdn.co/embedded/index.html"]'
@@ -130,6 +131,9 @@ export default {
             return this.internalDevice.id;
           }
 
+          if (!devices.length) {
+            return null;
+          }
           return devices[0].id;
         };
 
@@ -142,8 +146,9 @@ export default {
       this.log("[Running] getLocalPlayerState");
       return this.webPlayer.getCurrentState();
     },
-    async playSong(song) {
+    async playSong(song, attempts = 0) {
       this.log("[Running] playSong");
+      clearTimeout(this.fallbackTimer);
       if (!this.playlistUri && this.source !== "your-songs") {
         return;
       }
@@ -153,6 +158,21 @@ export default {
       }
 
       const deviceId = await this.getDeviceId();
+
+      if (!deviceId) {
+        if (attempts < 3) {
+          this.fallbackTimer = setTimeout(() => {
+            this.playSong(song, attempts + 1);
+          }, 2500);
+          return;
+        } else {
+          this.$store.commit("toast/addToast", {
+            message:
+              "There was an error getting the spotify device, you may not be able to listen",
+          });
+          return;
+        }
+      }
       this.currentlyPlaying = song.spotify_id;
 
       const opts = {};

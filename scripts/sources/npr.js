@@ -26,7 +26,7 @@ const run = async () => {
       if ($(this).next().hasClass("video")) {
         const position = parseInt($(this).nextAll("h6:first").text());
         const artist = $(this).nextAll("h3").eq(0).text();
-        const title = $(this).nextAll("h3").eq(1).text();
+        const title = $(this).nextAll("h3").eq(1).text().trim();
         const youtube = $(this)
           .next(".video")
           .find("iframe")
