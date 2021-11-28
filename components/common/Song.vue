@@ -1,27 +1,32 @@
 <template>
-  <div
-    class="song-link"
-    :class="{ interactive, active: isPlaying }"
-    :role="interactive ? 'button' : ''"
-    :tabindex="interactive && !isPlaying ? 0 : -1"
-  >
-    <text-mutate
-      :text="title"
-      class="song-link-text song-link-text--title"
-      :speed="1000 + delay"
-    />
-    <text-mutate
-      class="song-link-text song-link-text--artist"
-      :text="artist"
-      :speed="1200 + delay"
-    />
+  <intersect @enter="() => (show = true)">
     <div
-      v-if="basicPosition"
-      class="song-link-position song-link-position--basic"
+      class="song-link"
+      :class="{ interactive, active: isPlaying }"
+      :role="interactive ? 'button' : ''"
+      :tabindex="interactive && !isPlaying ? 0 : -1"
     >
-      {{ basicPosition }}
-    </div>
-    <!-- <div
+      <text-mutate
+        :autoPlay="false"
+        :show="show"
+        :text="title"
+        class="song-link-text song-link-text--title"
+        :speed="1000 + delay"
+      />
+      <text-mutate
+        :autoPlay="false"
+        :show="show"
+        class="song-link-text song-link-text--artist"
+        :text="artist"
+        :speed="1200 + delay"
+      />
+      <div
+        v-if="basicPosition"
+        class="song-link-position song-link-position--basic"
+      >
+        {{ basicPosition }}
+      </div>
+      <!-- <div
       v-if="arrayPosition"
       class="song-link-position song-link-position--complex"
     >
@@ -29,19 +34,22 @@
         {{ item.position }}
       </span>
     </div> -->
-    <div
-      v-if="arrayPosition"
-      class="song-link-position song-link-position--complex"
-    >
-      {{ arrayPosition }} ({{ positions.length }})
+      <div
+        v-if="arrayPosition"
+        class="song-link-position song-link-position--complex"
+      >
+        {{ arrayPosition }} ({{ positions.length }})
+      </div>
     </div>
-  </div>
+  </intersect>
 </template>
 
 <script>
+import Intersect from "vue-intersect";
 import TextMutate from "./TextMutate.vue";
+
 export default {
-  components: { TextMutate },
+  components: { TextMutate, Intersect },
   props: {
     interactive: {
       type: Boolean,
@@ -112,6 +120,12 @@ export default {
         ) / 10
       );
     },
+    onEnter() {},
+  },
+  data() {
+    return {
+      show: false,
+    };
   },
 };
 </script>

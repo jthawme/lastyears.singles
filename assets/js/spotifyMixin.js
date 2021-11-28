@@ -7,15 +7,17 @@ import { getSpotify, getSpotifyAuthoriseUrl } from "./spotify";
 
 export const SpotifyMixin = {
   async mounted() {
-    let loggedIn = await this.getCurrentToken();
+    requestIdleCallback(async () => {
+      let loggedIn = await this.getCurrentToken();
 
-    if (!loggedIn) {
-      loggedIn = await this.getPreviousToken();
-    }
+      if (!loggedIn) {
+        loggedIn = await this.getPreviousToken();
+      }
 
-    if (!loggedIn) {
-      this.setupAuthorise();
-    }
+      if (!loggedIn) {
+        this.setupAuthorise();
+      }
+    });
   },
   data() {
     return {

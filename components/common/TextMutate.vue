@@ -34,6 +34,14 @@ export default {
       type: String,
       default: "div",
     },
+    autoPlay: {
+      type: Boolean,
+      default: true,
+    },
+    show: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     const destination = this.text.split("").map((c) => ({ text: c }));
@@ -43,16 +51,30 @@ export default {
       characters: getRandom(destination),
     };
   },
+  beforeMount() {
+    this.playing = false;
+  },
+  watch: {
+    show(val, oldVal) {
+      if (val && !oldVal && !this.playing) {
+        this.update();
+      }
+    },
+  },
   mounted() {
     this.start = Date.now();
     this.last = this.start;
-    this.update();
+
+    if (this.autoPlay) {
+      this.update();
+    }
   },
   beforeDestroy() {
     cancelAnimationFrame(this.raf);
   },
   methods: {
     update(dt = 0) {
+      this.playing = true;
       const now = Date.now();
 
       if (now > this.start + this.speed) {

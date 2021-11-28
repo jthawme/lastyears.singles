@@ -20,6 +20,11 @@ export default {
       default: undefined,
     },
   },
+  computed: {
+    shouldPlay() {
+      return this.$store.state.player.shouldPlay;
+    },
+  },
   async mounted() {
     this.YT = await getYoutube();
 
@@ -50,10 +55,13 @@ export default {
     onPlayerReady() {
       this.ready = true;
 
-      // Do this in case the initial video is unable. It doesnt report it as an error
-      this.checkTimer = setTimeout(() => {
-        this.$emit("unable");
-      }, 5000);
+      if (this.shouldPlay) {
+        this.player.playVideo();
+        // Do this in case the initial video is unable. It doesnt report it as an error
+        this.checkTimer = setTimeout(() => {
+          this.$emit("unable");
+        }, 5000);
+      }
     },
     onPlayerStateChange(event) {
       clearTimeout(this.timeUpdateId);

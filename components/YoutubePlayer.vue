@@ -39,7 +39,6 @@ export default {
     return {
       previewSrc: null,
       playerVars: {
-        autoplay: 1,
         modestbranding: 0,
         rel: 0,
         showinfo: 0,
@@ -176,6 +175,15 @@ export default {
 
 <style lang="scss" scoped>
 .hider {
-  display: none;
+  opacity: 0;
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100px;
+  height: 100px;
+
+  pointer-events: none;
 }
 </style>
