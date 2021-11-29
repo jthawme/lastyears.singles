@@ -7,7 +7,7 @@ import { getSpotify, getSpotifyAuthoriseUrl } from "./spotify";
 
 export const SpotifyMixin = {
   async mounted() {
-    requestIdleCallback(async () => {
+    requestAnimationFrame(async () => {
       let loggedIn = await this.getCurrentToken();
 
       if (!loggedIn) {
