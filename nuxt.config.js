@@ -142,6 +142,7 @@ export default {
   },
 
   build: {
+    transpile: [/vue-intersect/],
     extend(config, context) {
       if (context.isClient) {
         config.externals = ["fs", "path"];

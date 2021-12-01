@@ -22,4 +22,13 @@ const NAMES = {
   [SOURCE.BIG_J_THE_WIZARD_KING]: "Big J The Wizard King",
 };
 
-module.exports = { SOURCE, NAMES };
+const COLORS = [
+  "#FFD98F",
+  "#C9F3AE",
+  "#7FABC3",
+  "#DD8C86",
+  "#D3B2E8",
+  "#F5ADC7",
+];
+
+module.exports = { SOURCE, NAMES, COLORS };

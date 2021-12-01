@@ -127,7 +127,7 @@ export default {
       this.$store.commit("setIdle", false);
       this.idleTimer = setTimeout(() => {
         this.$store.commit("setIdle", true);
-      }, 10000);
+      }, 7500);
     },
   },
 };

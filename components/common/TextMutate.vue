@@ -57,22 +57,24 @@ export default {
   watch: {
     show(val, oldVal) {
       if (val && !oldVal && !this.playing) {
-        this.update();
+        this.start();
       }
     },
   },
   mounted() {
-    this.start = Date.now();
-    this.last = this.start;
-
     if (this.autoPlay) {
-      this.update();
+      this.start();
     }
   },
   beforeDestroy() {
     cancelAnimationFrame(this.raf);
   },
   methods: {
+    start() {
+      this.start = Date.now();
+      this.last = this.start;
+      this.update();
+    },
     update(dt = 0) {
       this.playing = true;
       const now = Date.now();

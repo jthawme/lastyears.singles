@@ -34,7 +34,7 @@ const initialiseSpotify = (authCode = false) => {
         spotify.setAccessToken(data.body["access_token"]);
         spotify.setRefreshToken(data.body["refresh_token"]);
         spotifyStored = spotify;
-        res.send("hey");
+        res.send("<script>window.close()</script>");
         resolve(spotify);
         server.close();
       });
@@ -58,6 +58,21 @@ const initialiseSpotify = (authCode = false) => {
     return spotify.clientCredentialsGrant().then((data) => {
       spotify.setAccessToken(data.body["access_token"]);
       return spotify;
+    });
+  }
+};
+
+const getArtistByName = async (name) => {
+  try {
+    const spotify = await initialiseSpotify();
+
+    const artist = await spotify
+      .searchArtists(name)
+      .then((value) => value.body);
+    return artist.artists.total > 0 ? artist.artists.items[0] : false;
+  } catch (e) {
+    return handleSpotifyError(e).then(() => {
+      return getArtistByName(name);
     });
   }
 };
@@ -180,4 +195,5 @@ module.exports = {
   getFullPlaylist,
   createPlaylist,
   updatePlaylist,
+  getArtistByName,
 };

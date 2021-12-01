@@ -1,5 +1,5 @@
 <template>
-  <intersect @enter="() => (show = true)">
+  <intersect @enter.once="() => (show = true)">
     <div
       class="song-link"
       :class="{ interactive, active: isPlaying }"

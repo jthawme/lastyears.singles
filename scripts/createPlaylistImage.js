@@ -6,7 +6,7 @@ const {
   registerFont,
   measureText,
 } = require("canvas");
-const { NAMES } = require("./constants");
+const { NAMES, COLORS } = require("./constants");
 
 registerFont(path.join(__dirname, "../assets/fonts/GT-Cinetype-Bold.woff"), {
   family: "GT Cinetype",
@@ -51,7 +51,12 @@ const makeImage = async (source, songsLength, year) => {
   const w = (perc) => WIDTH * perc;
   const h = (perc) => WIDTH * perc;
 
-  const img = await loadImage(path.join(__dirname, "public/images/bg-alt.png"));
+  ctx.fillStyle = COLORS[Object.keys(NAMES).indexOf(source) % COLORS.length];
+  ctx.fillRect(0, 0, w(1), h(1));
+
+  const img = await loadImage(
+    path.join(__dirname, "public/images/bg-transparent.png")
+  );
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
   // ctx.fillStyle = `#b7babb`;
