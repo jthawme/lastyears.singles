@@ -1,5 +1,6 @@
 <script>
 import { getSpotifyAuthoriseUrl } from "~/assets/js/spotify";
+import { SpotifyTokenMixin } from "~/assets/js/spotifyTokenMixin";
 import { listenCb } from "~/assets/js/utils";
 const STATUS = {
   READY: "ready",
@@ -10,6 +11,7 @@ export default {
   render() {
     return null;
   },
+  mixins: [SpotifyTokenMixin],
   data() {
     return {
       debug: false,
@@ -39,14 +41,14 @@ export default {
       this.log("[Running] onSpotifyWebPlaybackSDKReady");
       this.webPlayer = new Spotify.Player({
         name: "lastyears.singles",
-        getOAuthToken: (cb) => {
-          cb(this.spotifyToken);
+        getOAuthToken: async (cb) => {
+          const token = await this.refreshToken(this.spotifyRefreshToken);
+          cb(token);
         },
         volume: 1,
       });
 
       this.webPlayer.addListener("ready", ({ device_id }) => {
-        console.log("waddup g");
         // weird no audio fix
         const iframe = document.querySelector(
           'iframe[src="https://sdk.scdn.co/embedded/index.html"]'
@@ -104,43 +106,67 @@ export default {
       this.log("[Running] onPause");
       this.$store.commit("player/togglePlay", false);
     },
+    async handleError(e, retry = () => {}) {
+      if (e.statusCode === 401) {
+        await this.refreshToken(this.spotifyRefreshToken);
+        retry();
+      } else {
+        this.log("Spotify error", e);
+
+        this.$store.commit("toast/addToast", {
+          message: "There was an error with Spotify, refresh",
+          action: {
+            to: "#",
+            label: "Refresh",
+            callback() {
+              window.location.reload();
+            },
+          },
+        });
+      }
+    },
     async getDeviceId() {
       this.log("[Running] getDeviceId");
-      const { devices } = await this.spotify.getMyDevices();
 
-      if (this.deviceId) {
-        const oldDevice = devices.find((d) => d.id === this.deviceId);
+      try {
+        const { devices } = await this.spotify.getMyDevices();
 
-        if (!oldDevice || !oldDevice.active) {
-          this.deviceId = null;
+        if (this.deviceId) {
+          const oldDevice = devices.find((d) => d.id === this.deviceId);
+
+          if (!oldDevice || !oldDevice.active) {
+            this.deviceId = null;
+          }
         }
+
+        if (!this.deviceId) {
+          const getActiveId = () => {
+            const activeDevice = devices.find((d) => d.is_active);
+
+            if (activeDevice) {
+              return activeDevice.id;
+            }
+
+            if (
+              this.internalDevice &&
+              this.internalDevice.status === STATUS.READY
+            ) {
+              return this.internalDevice.id;
+            }
+
+            if (!devices.length) {
+              return null;
+            }
+            return devices[0].id;
+          };
+
+          this.deviceId = getActiveId();
+        }
+
+        return this.deviceId;
+      } catch (e) {
+        return this.handleError(e, () => this.getDeviceId());
       }
-
-      if (!this.deviceId) {
-        const getActiveId = () => {
-          const activeDevice = devices.find((d) => d.is_active);
-
-          if (activeDevice) {
-            return activeDevice.id;
-          }
-
-          if (
-            this.internalDevice &&
-            this.internalDevice.status === STATUS.READY
-          ) {
-            return this.internalDevice.id;
-          }
-
-          if (!devices.length) {
-            return null;
-          }
-          return devices[0].id;
-        };
-
-        this.deviceId = getActiveId();
-      }
-
-      return this.deviceId;
     },
     async getLocalPlayerState() {
       this.log("[Running] getLocalPlayerState");
@@ -184,24 +210,39 @@ export default {
         opts.uris = this.queueUris.map((uri) => `spotify:track:${uri}`);
       }
 
-      await this.spotify.play({
-        ...opts,
-        device_id: deviceId,
-        offset: {
-          position: this.queueUris.findIndex((uri) => song.spotify_id === uri),
-        },
-      });
+      try {
+        await this.spotify.play({
+          ...opts,
+          device_id: deviceId,
+          offset: {
+            position: this.queueUris.findIndex(
+              (uri) => song.spotify_id === uri
+            ),
+          },
+        });
+      } catch (e) {
+        return this.handleError(e, () => this.playSong(song));
+      }
 
       this.getCurrent();
     },
     async play() {
       this.log("[Running] play");
-      await this.spotify.play();
+
+      try {
+        await this.spotify.play();
+      } catch (e) {
+        return this.handleError(e, () => this.play());
+      }
       this.getCurrent();
     },
     async pause() {
       this.log("[Running] pause");
-      await this.spotify.pause();
+      try {
+        await this.spotify.pause();
+      } catch (e) {
+        return this.handleError(e, () => this.pause());
+      }
     },
     async getCurrent() {
       // this.log("[SD][Running] getCurrent");
@@ -280,7 +321,8 @@ export default {
           this.updateTimer = setTimeout(() => this.getCurrent(), 2000);
         }
       } catch (e) {
-        console.error("[SD] Get current error", e);
+        this.log("Get current error", e);
+        return this.handleError(e, () => this.getCurrent());
       }
     },
     getActivePlaylist(uri) {
@@ -300,6 +342,9 @@ export default {
     },
     spotifyToken() {
       return this.$store.state.spotify.token;
+    },
+    spotifyRefreshToken() {
+      return this.$store.state.spotify.refresh;
     },
     source() {
       return this.$store.state.queue.source;

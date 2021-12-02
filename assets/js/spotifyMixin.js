@@ -3,9 +3,11 @@ import queryString from "query-string";
 import { PLAYER_CONTROL } from "~/store/player";
 import { ACCESS_TOKEN_KEY, STATE_KEY } from "./constants";
 import { getItem, setItem } from "./localStorage";
-import { getSpotify, getSpotifyAuthoriseUrl } from "./spotify";
+import { getSpotifyAuthoriseUrl } from "./spotify";
+import { SpotifyTokenMixin } from "./spotifyTokenMixin";
 
 export const SpotifyMixin = {
+  mixins: [SpotifyTokenMixin],
   async mounted() {
     requestAnimationFrame(async () => {
       let loggedIn = await this.getCurrentToken();
@@ -46,19 +48,21 @@ export const SpotifyMixin = {
      *
      * @returns {Promise<boolean>}
      */
-    getPreviousToken() {
+    async getPreviousToken() {
       const prevToken = getItem(ACCESS_TOKEN_KEY);
 
       if (prevToken) {
-        const [expires, token] = prevToken.split(":");
+        const [expires, token, refresh] = prevToken.split(":");
 
         if (
           !isNaN(parseInt(expires)) &&
           Date.now() < parseInt(expires) &&
           token
         ) {
-          this.setToken(token, parseInt(expires));
+          this.setToken(token, refresh, parseInt(expires));
           return Promise.resolve(true);
+        } else if (token && refresh) {
+          this.refreshToken(refresh);
         }
       }
 
@@ -70,11 +74,11 @@ export const SpotifyMixin = {
      *
      * @returns {Promise<boolean>}
      */
-    getCurrentToken() {
-      if (window.location.hash) {
-        const { state, access_token, expires_in } = queryString.parse(
-          window.location.hash
-        );
+    async getCurrentToken() {
+      if (window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        const state = params.get("state");
+        const code = params.get("code");
 
         window.history.replaceState(
           {},
@@ -84,34 +88,20 @@ export const SpotifyMixin = {
 
         const prevStateToken = getItem(STATE_KEY);
 
-        if (state && access_token && expires_in && state === prevStateToken) {
-          plausible("Spotify Connect", { props: { status: "completed" } });
+        if (code && state === prevStateToken) {
+          await this.exchangeToken(code);
 
           this.$store.commit("toast/addToast", {
             message: "Successfully connected to spotify, happy listening!",
           });
 
-          this.setToken(
-            access_token.toString(),
-            Date.now() + parseFloat(expires_in.toString()) * 1000
-          );
+          plausible("Spotify Connect", { props: { status: "completed" } });
 
           return Promise.resolve(true);
         }
       }
 
       return Promise.resolve(false);
-    },
-
-    /**
-     * Initiates the spotify object and attaches it to vuex
-     *
-     * @param {string} token
-     * @param {number} expires
-     */
-    setToken(token, expires) {
-      this.$store.commit("spotify/setSpotifyToken", token);
-      this.$store.commit("spotify/setObject", getSpotify(token, expires));
     },
 
     /**
