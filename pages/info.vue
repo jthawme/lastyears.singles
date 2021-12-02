@@ -3,26 +3,30 @@
     <span class="largeness">Music is dead. Long live Music.</span>
 
     <client-only>
-      <your-songs />
+      <YourSongs />
     </client-only>
 
-    <mosaic />
+    <Mosaic />
 
-    <about />
+    <About />
+
+    <Share />
   </div>
 </template>
 
 <script>
+import Share from "~/components/Share.vue";
 import About from "../components/About.vue";
 import Mosaic from "../components/Mosaic.vue";
 import YourSongs from "../components/YourSongs.vue";
+
 export default {
   head() {
     return {
       title: `Info`,
     };
   },
-  components: { YourSongs, About, Mosaic },
+  components: { YourSongs, About, Mosaic, Share },
   computed: {
     playing() {
       return this.$store.state.player.playing;

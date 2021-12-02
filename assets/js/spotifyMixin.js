@@ -54,6 +54,8 @@ export const SpotifyMixin = {
       if (prevToken) {
         const [expires, token, refresh] = prevToken.split(":");
 
+        console.log(expires, token, refresh);
+
         if (
           !isNaN(parseInt(expires)) &&
           Date.now() < parseInt(expires) &&
@@ -63,6 +65,7 @@ export const SpotifyMixin = {
           return Promise.resolve(true);
         } else if (token && refresh) {
           this.refreshToken(refresh);
+          return Promise.resolve(true);
         }
       }
 
