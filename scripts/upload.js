@@ -66,10 +66,22 @@ const runUploadServer = (items, source, year) => {
 
     app.post("/api/submit", async (req, res) => {
       try {
-        const { songId, spotifyTrack, youtubeLink, title, artist, position } =
-          req.body;
+        const {
+          songId,
+          spotifyTrack,
+          youtubeLink,
+          title,
+          artist,
+          position,
+          skip,
+        } = req.body;
 
         let id = songId;
+
+        if (skip) {
+          itemIdx++;
+          return res.json({ success: true });
+        }
 
         if ((!spotifyTrack || !youtubeLink) && !songId) {
           throw new Error("Need spotify and yutube");

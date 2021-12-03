@@ -35,6 +35,7 @@ const createCurrent = (item) => {
       }"/>
     </label>
     <button>Post</button>
+    <button class="skip">Skip</button>
     </form>
 
     <a href="https://www.google.com/search?q=${prep(item.title)}+${prep(
@@ -66,6 +67,25 @@ const createCurrent = (item) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+    }).then((resp) => resp.json());
+
+    console.log(result);
+
+    if (result.success) {
+      getNext();
+    }
+  });
+
+  form.querySelector(".skip").addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const result = await fetch("/api/submit", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ skip: true }),
     }).then((resp) => resp.json());
 
     console.log(result);

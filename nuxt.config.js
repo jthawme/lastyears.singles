@@ -130,7 +130,7 @@ export default {
 
   pwa: {
     meta: {
-      theme_color: "#FFD98F",
+      theme_color: "#272727",
     },
     manifest: {
       lang: "en",

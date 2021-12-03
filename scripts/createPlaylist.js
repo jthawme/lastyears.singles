@@ -39,13 +39,13 @@ const getInitialSongs = async () => {
   return reduceSongStructure(songs);
 };
 
-const createPlaylistIfNotExist = async (source, items) => {
+const createPlaylistIfNotExist = async (source, items, max) => {
   const { name, year } = getPlaylistDetails(source);
   const playlistName = getPlaylistName(source);
 
   const existing = await getPlaylist(playlistName);
 
-  const image = await makeImage(name, items.length, year);
+  const image = await makeImage(name, max, year);
 
   if (existing) {
     return updatePlaylist(
@@ -74,7 +74,8 @@ const createPlaylistIfNotExist = async (source, items) => {
 
       return createPlaylistIfNotExist(
         source,
-        items.map((item) => item.spotify_id)
+        items.map((item) => item.spotify_id),
+        Math.max(...items.map((item) => item.positions))
       ).then((playlist) => ({
         playlist,
         source,

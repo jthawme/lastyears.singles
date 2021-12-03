@@ -5,12 +5,20 @@ const { runUpload, runUploadServer } = require("../upload");
 const { SOURCE } = require("../constants");
 
 const targetUrls = [
-  "https://www.npr.org/2020/12/03/931771524/the-100-best-songs-of-2020-page-1",
-  "https://www.npr.org/2020/12/03/934634561/the-100-best-songs-of-2020-page-2",
-  "https://www.npr.org/2020/12/03/934634607/the-100-best-songs-of-2020-page-3",
-  "https://www.npr.org/2020/12/03/934634855/the-100-best-songs-of-2020-page-4",
-  "https://www.npr.org/2020/12/03/934634998/the-100-best-songs-of-2020-page-5",
+  "https://www.npr.org/2021/12/02/1054377950/the-100-best-songs-of-2021-page-1",
+  "https://www.npr.org/2021/12/02/1054378275/the-100-best-songs-of-2021-page-2",
+  "https://www.npr.org/2021/12/02/1054379062/the-100-best-songs-of-2021-page-3",
+  "https://www.npr.org/2021/12/02/1054379661/the-100-best-songs-of-2021-page-4",
+  "https://www.npr.org/2021/12/02/1054380365/the-100-best-songs-of-2021-page-5",
 ];
+//2020
+// const targetUrls = [
+//   "https://www.npr.org/2020/12/03/931771524/the-100-best-songs-of-2020-page-1",
+//   "https://www.npr.org/2020/12/03/934634561/the-100-best-songs-of-2020-page-2",
+//   "https://www.npr.org/2020/12/03/934634607/the-100-best-songs-of-2020-page-3",
+//   "https://www.npr.org/2020/12/03/934634855/the-100-best-songs-of-2020-page-4",
+//   "https://www.npr.org/2020/12/03/934634998/the-100-best-songs-of-2020-page-5",
+// ];
 
 const run = async () => {
   const getPage = async (idx = 0) => {
@@ -23,12 +31,13 @@ const run = async () => {
 
     const songs = [];
     $("#storytext .hr").each(function (idx, el) {
-      if ($(this).next().hasClass("video")) {
+      if ($(this).next().is("h6.edTag")) {
         const position = parseInt($(this).nextAll("h6:first").text());
         const artist = $(this).nextAll("h3").eq(0).text();
         const title = $(this).nextAll("h3").eq(1).text().trim();
         const youtube = $(this)
-          .next(".video")
+          .nextAll(".video")
+          .eq(0)
           .find("iframe")
           .attr("src")
           .split("embed/")
@@ -49,7 +58,7 @@ const run = async () => {
 
   const data = await Promise.all(targetUrls.map((url, idx) => getPage(idx)));
 
-  await runUploadServer(data.flat(), SOURCE.NPR, 2020);
+  await runUploadServer(data.flat(), SOURCE.NPR, 2021);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 
