@@ -1,9 +1,8 @@
 <template>
   <div class="main">
     <div class="list" v-for="year in lists" :key="year[0]">
-      <span class="year" v-if="displayYears && notCurrent(year[0])">{{
-        year[0]
-      }}</span>
+      <!-- <span class="year" v-if="displayYears && notCurrent(year[0])">{{ -->
+      <span class="year" v-if="displayYears">{{ year[0] }}</span>
       <nuxt-link
         v-for="list in year[1]"
         class="std"
