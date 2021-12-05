@@ -10,11 +10,13 @@
     </main>
 
     <transition name="fade" mode="out-in">
-      <squares v-if="isSource('pitchfork') && displayVisual" />
-      <circles v-if="isSource('nme') && displayVisual" />
+      <Squares v-if="isSource('pitchfork') && displayVisual" />
+      <Circles v-if="isSource('nme') && displayVisual" />
       <Field v-if="isSource('the-fader') && displayVisual" />
-      <shift-squares v-if="isSource('billboard') && displayVisual" />
+      <ShiftSquares v-if="isSource('billboard') && displayVisual" />
       <Ticking v-if="isSource('npr') && displayVisual" />
+      <CircleWaves v-if="isSource('triple-j')" />
+      <Lissajous v-if="isSource('consequence-of-sound')" />
     </transition>
 
     <MainBar />
@@ -37,17 +39,13 @@ import { SavedMixin } from "../assets/js/saveMixin";
 import { BreakPointSet } from "../assets/js/mixins/breakpoints";
 import MainBar from "~~/components/MainBar.vue";
 import DiscreetNav from "~~/components/DiscreetNav.vue";
-import Squares from "~/components/Animations/Squares.vue";
 import YoutubePlayer from "~/components/YoutubePlayer.vue";
 import SpotifyPlayer from "~/components/SpotifyPlayer.vue";
 import { PLAYER_CONTROL } from "~/store/player";
-import Circles from "~/components/Animations/Circles.vue";
-import Field from "~/components/Animations/Field.vue";
-import ShiftSquares from "~/components/Animations/ShiftSquares.vue";
 import { getItem } from "~/assets/js/localStorage";
 import { EGO_KEY } from "~/assets/js/constants";
 import Toast from "~/components/common/Toast.vue";
-import Ticking from "~/components/Animations/Ticking.vue";
+import Lissajous from "../components/Animations/Lissajous.vue";
 
 const SITE_TITLE = "Last Years Singles";
 
@@ -55,14 +53,17 @@ export default {
   components: {
     MainBar,
     DiscreetNav,
-    Squares,
     YoutubePlayer,
     SpotifyPlayer,
-    Circles,
-    Field,
-    ShiftSquares,
     Toast,
-    Ticking,
+    Squares: () => import("../components/Animations/Squares.vue"),
+    Circles: () => import("../components/Animations/Circles.vue"),
+    Field: () => import("../components/Animations/Field.vue"),
+    CircleWaves: () => import("../components/Animations/CircleWaves.vue"),
+    ShiftSquares: () => import("../components/Animations/ShiftSquares.vue"),
+    Ticking: () => import("../components/Animations/Ticking.vue"),
+    Lissajous: () => import("../components/Animations/Lissajous.vue"),
+    Lissajous,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
