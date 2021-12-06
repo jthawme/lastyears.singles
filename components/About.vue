@@ -42,6 +42,8 @@ export default {};
 
 <style lang="scss" scoped>
 .outer {
+  margin-bottom: 4em;
+
   h2 {
     font-size: var(--font-size-normal);
 
@@ -54,6 +56,14 @@ export default {};
 
       a {
         color: var(--color-active);
+      }
+    }
+  }
+
+  @include tablet {
+    .content {
+      p {
+        max-width: 50%;
       }
     }
   }

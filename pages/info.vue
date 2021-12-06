@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <span class="largeness">Music is dead. Long live Music.</span>
+    <span class="largeness">Music is&nbsp;dead. Long live Music.</span>
 
     <client-only>
       <YourSongs />
@@ -43,7 +43,7 @@ export default {
 .largeness {
   display: flex;
 
-  font-size: 24vw;
+  font-size: 22vw;
   line-height: 0.9;
 
   margin: 0 -1vw;

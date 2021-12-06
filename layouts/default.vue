@@ -11,7 +11,7 @@
 
     <portal-target name="outside"></portal-target>
 
-    <main :class="{ hide: idle && playing && displayVisual }">
+    <main :class="{ hide: idle && displayVisual }">
       <nuxt />
     </main>
 
@@ -23,6 +23,7 @@
       <Ticking v-if="isSource('npr') && displayVisual" />
       <CircleWaves v-if="isSource('triple-j')" />
       <Lissajous v-if="isSource('consequence-of-sound')" />
+      <World v-if="isSource('big-j-the-wizard-king')" />
     </transition>
 
     <MainBar />
@@ -70,6 +71,7 @@ export default {
     ShiftSquares: () => import("../components/Animations/ShiftSquares.vue"),
     Ticking: () => import("../components/Animations/Ticking.vue"),
     Lissajous: () => import("../components/Animations/Lissajous.vue"),
+    World: () => import("../components/Animations/World.vue"),
     BugCatch,
     IntroText,
   },

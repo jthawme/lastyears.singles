@@ -19,7 +19,6 @@ import anime from "animejs";
 const AMT = 5;
 
 const getPin = (width, height, color = 0x000000) => {
-  console.log("hey", color);
   const mat = new THREE.MeshBasicMaterial({
     color: new THREE.Color(color),
   });

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { clamp, deg2rad, mapRange } from "~/assets/js/utils";
+import { clamp, deg2rad, getVar, mapRange } from "~/assets/js/utils";
 import * as THREE from "three";
 import { MainEngine } from "~/assets/js/engine";
 import Canvas from "../common/Canvas.vue";
@@ -40,7 +40,9 @@ const getPlaneGroup = (
   bgColor = 0x272727
 ) => {
   const plane1 = getPlane(w * 1.05, h, frontColor);
+  plane1.name = "one";
   const plane2 = getPlane(w * 1.05 - stroke * 2, h - stroke * 2, bgColor);
+  plane2.name = "two";
   plane2.position.z += 0.1;
 
   const g = new THREE.Group();
@@ -73,12 +75,39 @@ export default {
     playing() {
       return this.$store.state.player.shouldPlay;
     },
+    colour() {
+      return this.$store.state.colour;
+    },
   },
   beforeDestroy() {
     this.unlisten && this.unlisten.forEach((cb) => cb());
     this.engine.destroy();
   },
   watch: {
+    colour() {
+      const frontColor = new THREE.Color(getVar("--color-dark-black"));
+      const bgColor = new THREE.Color(getVar("--color-bg"));
+
+      this.group.traverse((child) => {
+        let color = 0x000000;
+
+        if (child.name === "one") {
+          color = frontColor;
+        } else if (child.name === "two") {
+          color = bgColor;
+        }
+
+        if (child.material) {
+          const mat = new THREE.MeshBasicMaterial({
+            color,
+            side: THREE.DoubleSide,
+            depthTest: false,
+          });
+
+          child.material = mat;
+        }
+      });
+    },
     playing(newVal) {
       if (!this.animations) {
         return;
@@ -129,25 +158,8 @@ export default {
       planes[0].renderOrder = 100;
       group.add(planes[0]);
 
-      // group.rotateY(deg2rad(-35));
-      // group.rotateX(deg2rad(180));
-      // group.rotateZ(deg2rad(1));
       group.rotation.set(deg2rad(-20), deg2rad(-30), deg2rad(-1));
       this.group = group;
-
-      // const box3 = new THREE.Box3().setFromObject(group);
-      // const vector = new THREE.Vector3();
-      // box3.getCenter(vector);
-      // group.position.set(-vector.x, -vector.y, -vector.z);
-
-      // this.engine.camera.position.set(10, -20, 15);
-      // this.engine.camera.rotation.order = "YXZ";
-      // this.engine.camera.rotation.y = -Math.PI / 5;
-      // this.engine.camera.rotation.x = Math.atan(-1 / Math.sqrt(4));
-      // this.engine.camera.lookAt(group.position);
-      // group.position.set(this.engine.scene.position);
-
-      window.group = group;
 
       this.engine.addObject(group);
 

@@ -52,7 +52,9 @@ export default {
 
   width: 100%;
 
-  font-size: 4vw;
+  font-size: 10vw;
+
+  padding: 0 var(--page-padding-x);
 
   transform: translate3d(-50%, -50%, 0);
 
@@ -62,5 +64,9 @@ export default {
   text-transform: uppercase;
 
   z-index: 100;
+
+  @include tablet {
+    font-size: 4vw;
+  }
 }
 </style>

@@ -29,7 +29,7 @@ export default {
   position: fixed;
 
   bottom: 0;
-  left: 0;
+  right: 0;
 
   z-index: 4;
 
@@ -43,6 +43,9 @@ export default {
   @include tablet {
     padding: var(--page-padding-y) var(--page-padding-x)
       calc(var(--page-padding-x) + 32px);
+
+    width: 50%;
+    right: 0;
   }
 }
 </style>

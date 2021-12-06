@@ -57,11 +57,16 @@ export default {
 
   // background-color: var(--color-text);
 
-  padding: calc(var(--page-padding-x) / 2);
+  padding: var(--page-padding-x);
+  overflow: hidden;
 
   h2 {
     margin: 0 0 4em;
     font-size: var(--font-size-normal);
+  }
+
+  @include tablet {
+    padding: calc(var(--page-padding-x) / 2);
   }
 }
 

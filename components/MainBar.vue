@@ -3,7 +3,8 @@
     <div class="column column-one">
       <div class="column-inner">
         <button @click="cycleColour" class="action">
-          <Icon name="layers" />
+          <!-- <Icon name="layers" /> -->
+          <Icon name="refresh" />
         </button>
       </div>
     </div>
@@ -220,7 +221,6 @@ export default {
       }
     },
     cycleColour() {
-      console.log("yo", this.$store.state.colour, this.$store.state.maxColours);
       this.$store.commit(
         "cycleColour",
         (this.$store.state.colour + 1) % this.$store.state.maxColours

@@ -13,40 +13,23 @@ import * as THREE from "three";
 import { MainEngine } from "~/assets/js/engine";
 import Canvas from "../common/Canvas.vue";
 import anime from "animejs";
+// import { makeNoise2D } from "fast-simplex-noise";
+// import { onWindowResize, tickUpdate } from "../assets/js/utils";
 
-const AMT = 8;
+const AMT = 6;
 
-const getCircle = (r, color = 0xff0000) => {
-  const geo = new THREE.CylinderGeometry(r, r, 1, 24);
+const getCube = (s, color = 0xff0000) => {
+  const geo = new THREE.BoxGeometry(s, s, s);
   const mat = new THREE.MeshBasicMaterial({
     color,
     side: THREE.DoubleSide,
+    wireframe: true,
   });
-  // const mat = new THREE.MeshNormalMaterial();
 
   const mesh = new THREE.Mesh(geo, mat);
   // mesh.add(getPlaneEdges(mesh));
 
   return mesh;
-};
-
-const getCircleGroup = (
-  r,
-  stroke = 4,
-  frontColor = 0x000000,
-  bgColor = 0x272727
-) => {
-  const circle1 = getCircle(r, frontColor);
-  circle1.name = "one";
-  const circle2 = getCircle(r - stroke * 2, bgColor);
-  circle2.name = "two";
-  circle2.position.z += 0.1;
-
-  const g = new THREE.Group();
-  g.add(circle1);
-  g.add(circle2);
-
-  return g;
 };
 
 export default {
@@ -70,7 +53,7 @@ export default {
       return this.$refs.canvas.height;
     },
     playing() {
-      return this.$store.state.player.playing;
+      return this.$store.state.player.shouldPlay;
     },
     colour() {
       return this.$store.state.colour;
@@ -83,38 +66,15 @@ export default {
   watch: {
     colour() {
       const frontColor = new THREE.Color(getVar("--color-dark-black"));
-      const bgColor = new THREE.Color(getVar("--color-bg"));
-
       this.group.traverse((child) => {
-        let color = 0x000000;
-
-        if (child.name === "one") {
-          color = frontColor;
-        } else if (child.name === "two") {
-          color = bgColor;
-        }
-
         if (child.material) {
-          const mat = new THREE.MeshBasicMaterial({
-            color,
+          child.material = new THREE.MeshBasicMaterial({
+            color: frontColor,
             side: THREE.DoubleSide,
-            depthTest: false,
+            wireframe: true,
           });
-
-          child.material = mat;
         }
       });
-    },
-    playing(newVal) {
-      if (!this.animation) {
-        return;
-      }
-
-      if (newVal) {
-        this.animation.play();
-      } else {
-        this.animation.pause();
-      }
     },
   },
   methods: {
@@ -125,50 +85,38 @@ export default {
 
       this.engine = new MainEngine();
       this.engine.setup(this.canvas, this.width, this.height);
+
       const frontColor = new THREE.Color(getVar("--color-dark-black"));
       const bgColor = new THREE.Color(getVar("--color-bg"));
 
-      const circles = new Array(AMT)
-        .fill(0)
-        .map(() =>
-          getCircleGroup(100, 2, frontColor.getHex(), bgColor.getHex())
-        );
+      const cubes = new Array(AMT).fill(0).map(() => getCube(50, frontColor));
       const group = new THREE.Group();
 
-      const positionArray = [];
-      circles.forEach((p, i) => {
-        p.rotateX(deg2rad(90));
-        positionArray.push(p.position);
-        group.add(p);
+      const r = 500;
+
+      cubes.forEach((cube, idx, arr) => {
+        const dx = r * Math.sin(Math.PI * 2 * (idx / arr.length));
+        const dz = r * Math.cos(Math.PI * 2 * (idx / arr.length));
+
+        cube.position.set(dx, 0, dz);
+        group.add(cube);
       });
 
-      // group.rotateY(deg2rad(-90));
-      this.engine.move(group, 0.5, 0.5);
       this.group = group;
 
-      this.engine.addObject(group);
+      this.engine.move(this.group, 0.5, 0.5);
+      this.engine.render(() => {
+        if (this.playing) {
+          cubes.forEach((cube) => {
+            cube.rotation.x += deg2rad(1);
+            cube.rotation.y += deg2rad(1);
+          });
 
-      this.animation = anime({
-        targets: positionArray,
-        y: [{ value: -200 }, { value: 200 }, { value: 0 }],
-        z: [
-          { value: -10, duration: 50 },
-          { value: 10, delay: 1000, duration: 50 },
-          { value: 10 },
-        ],
-        x: [
-          {
-            value: function (el, i) {
-              return mapRange(i, 0, AMT - 1, -200, 200);
-            },
-          },
-          { value: 0 },
-        ],
-        delay: anime.stagger(1000),
-        loop: true,
-        duration: 3000,
-        easing: "easeInOutQuad",
+          this.group.rotateY(deg2rad(0.25));
+          this.group.rotateZ(deg2rad(0.25));
+        }
       });
+      this.engine.addObject(group);
 
       this.engine.start();
       this.onResize();
