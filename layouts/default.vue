@@ -11,7 +11,7 @@
 
     <portal-target name="outside"></portal-target>
 
-    <main :class="{ hide: idle && displayVisual }">
+    <main :class="{ hide: idle && playing && displayVisual }">
       <nuxt />
     </main>
 
@@ -24,6 +24,7 @@
       <CircleWaves v-if="isSource('triple-j')" />
       <Lissajous v-if="isSource('consequence-of-sound')" />
       <World v-if="isSource('big-j-the-wizard-king')" />
+      <Swell v-if="isSource('complex')" />
     </transition>
 
     <MainBar />
@@ -72,18 +73,21 @@ export default {
     Ticking: () => import("../components/Animations/Ticking.vue"),
     Lissajous: () => import("../components/Animations/Lissajous.vue"),
     World: () => import("../components/Animations/World.vue"),
+    Swell: () => import("../components/Animations/Swell.vue"),
     BugCatch,
     IntroText,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
     const playing = this.playing;
+    const song = this.currentSong;
     return {
       title: this.title,
       titleTemplate: (titleChunk) => {
+        let prefix = this.song ? this.song.title : titleChunk;
         // If undefined or blank then we don't need the hyphen
-        return titleChunk && titleChunk !== SITE_TITLE
-          ? `${playing ? "🎵 " : ""}${titleChunk} - ${SITE_TITLE}`
+        return prefix && prefix !== SITE_TITLE
+          ? `${playing ? "🎵 " : ""}${prefix} - ${SITE_TITLE}`
           : `${playing ? "🎵 " : ""}${SITE_TITLE}`;
       },
     };
@@ -132,6 +136,9 @@ export default {
     },
     displayVisual() {
       return this.$store.state.displayVisual;
+    },
+    currentSong() {
+      return this.$store.state.player.song;
     },
   },
   methods: {

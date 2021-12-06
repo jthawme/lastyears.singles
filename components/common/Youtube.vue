@@ -88,6 +88,10 @@ export default {
       }
     },
     loadOrCreate() {
+      if (!this.YT) {
+        return;
+      }
+
       if (!this.player) {
         this.player = new this.YT.Player(this.$el, {
           height: "390",
