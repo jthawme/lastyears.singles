@@ -127,22 +127,24 @@ export default {
 
   user-select: none;
 
-  &:after {
-    content: "Back";
-
-    margin-left: 0.8ch;
-    opacity: 0;
-
-    // transition: {
-    //   duration: 0.25s;
-    //   property: opacity;
-    // }
-  }
-
-  &:hover,
-  &:focus-visible {
+  @include tablet {
     &:after {
-      opacity: 1;
+      content: "Back";
+
+      margin-left: 0.8ch;
+      opacity: 0;
+
+      // transition: {
+      //   duration: 0.25s;
+      //   property: opacity;
+      // }
+    }
+
+    &:hover,
+    &:focus-visible {
+      &:after {
+        opacity: 1;
+      }
     }
   }
 }

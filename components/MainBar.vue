@@ -5,8 +5,9 @@
         <nuxt-link
           @click="toggleDisplayVisual"
           :to="currentInternalLink"
-          v-if="currentInternalLink && !currentPage"
+          v-if="currentInternalLink"
           class="action"
+          :class="{ disabled: currentPage }"
         >
           <Icon name="layers" />
         </nuxt-link>
@@ -232,6 +233,7 @@ aside {
   width: 100%;
 
   display: grid;
+  align-items: flex-end;
 
   padding: 0 var(--page-padding-x) calc(var(--page-padding-y) * 1.5);
 
@@ -404,6 +406,10 @@ aside {
     cursor: pointer;
     color: black;
   }
+}
+
+a.action.disabled {
+  pointer-events: none;
 }
 
 .percentage {
