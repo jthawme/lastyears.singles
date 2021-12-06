@@ -2,15 +2,9 @@
   <aside :style="{ '--percentage': percentage }">
     <div class="column column-one">
       <div class="column-inner">
-        <nuxt-link
-          @click="toggleDisplayVisual"
-          :to="currentInternalLink"
-          v-if="currentInternalLink"
-          class="action"
-          :class="{ disabled: currentPage }"
-        >
+        <button @click="cycleColour" class="action">
           <Icon name="layers" />
-        </nuxt-link>
+        </button>
       </div>
     </div>
 
@@ -46,7 +40,15 @@
     </div>
 
     <div class="column column-three">
-      <div class="column-inner" v-if="currentSong">
+      <nuxt-link
+        :to="currentInternalLink"
+        class="column-inner"
+        v-if="currentInternalLink"
+      >
+        {{ currentSong.title }}<br />
+        {{ artist }}
+      </nuxt-link>
+      <div class="column-inner" v-else-if="currentSong">
         {{ currentSong.title }}<br />
         {{ artist }}
       </div>
@@ -217,6 +219,13 @@ export default {
           break;
       }
     },
+    cycleColour() {
+      console.log("yo", this.$store.state.colour, this.$store.state.maxColours);
+      this.$store.commit(
+        "cycleColour",
+        (this.$store.state.colour + 1) % this.$store.state.maxColours
+      );
+    },
   },
 };
 </script>
@@ -242,7 +251,7 @@ aside {
     "current current current"
     "layers actions save";
 
-  background-color: rgba(39, 39, 39, 0.1);
+  background-color: rgba(var(--color-black-deconstruct), 0.1);
   backdrop-filter: blur(1px);
 
   @include tablet {
@@ -293,6 +302,7 @@ aside {
 
     .column-inner {
       color: var(--color-active);
+      text-decoration: none;
     }
 
     @include tablet {
@@ -404,7 +414,7 @@ aside {
   &:not(:disabled):hover,
   &:not(:disabled):focus-visible {
     cursor: pointer;
-    color: black;
+    color: var(--color-dark-black);
   }
 }
 

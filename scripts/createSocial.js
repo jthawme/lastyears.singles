@@ -15,6 +15,10 @@ const SIZES = {
     WIDTH: 1000,
     HEIGHT: 1000,
     IMAGE: path.join(__dirname, "public/images/bg-transparent.png"),
+    PADDING: {
+      X: 0.05,
+      Y: 0.05,
+    },
   },
   WIDE: {
     WIDTH: 1200,
@@ -23,6 +27,10 @@ const SIZES = {
       __dirname,
       "public/images/social-background-wide-transparent.png"
     ),
+    PADDING: {
+      X: 0.025,
+      Y: 0.05,
+    },
   },
 };
 
@@ -37,7 +45,7 @@ function fillText(ctx, text, startX, startY, maxWidth, spacing = 0) {
   let x = 0;
 
   const { emHeightDescent } = ctx.measureText("M");
-  const lineHeight = emHeightDescent * 1;
+  const lineHeight = emHeightDescent * 0.8;
 
   words.forEach((word) => {
     const { width } = ctx.measureText(`${word} `);
@@ -60,10 +68,11 @@ function fillText(ctx, text, startX, startY, maxWidth, spacing = 0) {
 const makeTextFrame = async (
   text,
   scale = 0.1,
+  maxWidth = 0.9,
   bg = "#FFD98F",
   size = "SQUARE"
 ) => {
-  const { WIDTH, HEIGHT, IMAGE } = SIZES[size];
+  const { WIDTH, HEIGHT, IMAGE, PADDING } = SIZES[size];
 
   const canvas = createCanvas(WIDTH, HEIGHT);
   const ctx = canvas.getContext("2d");
@@ -81,7 +90,7 @@ const makeTextFrame = async (
   ctx.textBaseline = "top";
   ctx.font = `${w(scale)}px GT Cinetype`;
 
-  fillText(ctx, `${text}`, w(0.05), h(0.05), w(0.9));
+  fillText(ctx, `${text}`, w(PADDING.X), h(PADDING.Y), w(maxWidth));
 
   // const buffer = canvas.toBuffer("image/png");
   // fs.writeFileSync(path.join(__dirname, `../static/${source}-${year}.png`), buffer);
@@ -111,8 +120,8 @@ const makeImageFrame = async (
 
   const topImg = await loadImage(image);
 
-  const imgWidth = w(scale);
-  const imgHeight = (topImg.height / topImg.width) * imgWidth;
+  const imgHeight = h(scale);
+  const imgWidth = (topImg.width / topImg.height) * imgHeight;
 
   ctx.drawImage(
     topImg,
@@ -179,7 +188,12 @@ const deleteFiles = (files) => {
  *     image: string
  *     scale: number
  */
-const makeAnimation = async (frames, bg = "#FFD98F", size = "SQUARE") => {
+const makeAnimation = async (
+  frames,
+  bg = "#FFD98F",
+  size = "SQUARE",
+  output = "output.mp4"
+) => {
   if (!fs.existsSync(TMP_FOLDER)) {
     fs.mkdirSync(TMP_FOLDER);
   }
@@ -188,7 +202,13 @@ const makeAnimation = async (frames, bg = "#FFD98F", size = "SQUARE") => {
     frames.map((frame, idx) => {
       if (frame.type === "text") {
         return saveFrame(
-          makeTextFrame(frame.data.text, frame.data.scale, bg, size),
+          makeTextFrame(
+            frame.data.text,
+            frame.data.scale,
+            frame.data.maxWidth,
+            bg,
+            size
+          ),
           idx
         );
       }
@@ -212,13 +232,13 @@ const makeAnimation = async (frames, bg = "#FFD98F", size = "SQUARE") => {
     savedVideos.map((v) => `file ${v}`).join("\n")
   );
   await ffmpeg(
-    `-f concat -safe 0 -i ${tmp("list.txt")} -y -c copy ${tmp("output.mp4")}`
+    `-f concat -safe 0 -i ${tmp("list.txt")} -y -c copy ${tmp(output)}`
   );
 
   deleteFiles([...savedFrames, ...savedVideos, tmp("list.txt")]);
 
   // console.log(savedVideos);
-  return tmp("output.mp4");
+  return tmp(output);
 };
 
 function ordinalSuffix(i) {

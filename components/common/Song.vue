@@ -168,11 +168,11 @@ export default {
 
   &:not(.active):hover,
   &:not(.active):focus-visible {
-    color: black;
+    color: var(--color-dark-black);
   }
 
   &-position {
-    color: black;
+    color: var(--color-dark-black);
   }
 
   &-position--complex {

@@ -6,7 +6,7 @@
 import Canvas from "../common/Canvas.vue";
 import { makeNoise2D } from "fast-simplex-noise";
 import Loop from "raf-loop";
-import { clamp } from "~/assets/js/utils";
+import { clamp, getVar } from "~/assets/js/utils";
 
 const COLS = 50;
 const ROWS = 50;
@@ -66,7 +66,7 @@ export default {
       const noise = makeNoise2D();
       let frame = 0;
 
-      this.ctx.fillStyle = `black`;
+      this.ctx.fillStyle = getVar("--color-dark-black");
       const update = () => {
         this.ctx.clearRect(0, 0, this.width, this.height);
 

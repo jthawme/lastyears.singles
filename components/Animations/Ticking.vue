@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { clamp, deg2rad, mapRange } from "~/assets/js/utils";
+import { clamp, deg2rad, getVar, mapRange } from "~/assets/js/utils";
 import * as THREE from "three";
 import { MainEngine } from "~/assets/js/engine";
 import Canvas from "../common/Canvas.vue";
@@ -18,9 +18,10 @@ import anime from "animejs";
 
 const AMT = 5;
 
-const getPin = (width, height) => {
+const getPin = (width, height, color = 0x000000) => {
+  console.log("hey", color);
   const mat = new THREE.MeshBasicMaterial({
-    color: 0x000000,
+    color: new THREE.Color(color),
   });
   const geo = new THREE.BoxGeometry(width, height, 1);
 
@@ -77,7 +78,11 @@ export default {
       this.engine = new MainEngine();
       this.engine.setup(this.canvas, this.width, this.height);
 
-      const planes = new Array(AMT).fill(0).map(() => getPin(10, 200));
+      const color = new THREE.Color(getVar("--color-dark-black"));
+
+      const planes = new Array(AMT)
+        .fill(0)
+        .map(() => getPin(10, 200, color.getHex()));
       const group = new THREE.Group();
 
       const range = (AMT - 1) * 50;

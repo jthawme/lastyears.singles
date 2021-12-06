@@ -32,9 +32,15 @@ const getPlane = (w, h, color = 0xff0000) => {
   return mesh;
 };
 
-const getPlaneGroup = (w, h, stroke = 4) => {
-  const plane1 = getPlane(w * 1.05, h, 0x000000);
-  const plane2 = getPlane(w * 1.05 - stroke * 2, h - stroke * 2, 0x272727);
+const getPlaneGroup = (
+  w,
+  h,
+  stroke = 4,
+  frontColor = 0x000000,
+  bgColor = 0x272727
+) => {
+  const plane1 = getPlane(w * 1.05, h, frontColor);
+  const plane2 = getPlane(w * 1.05 - stroke * 2, h - stroke * 2, bgColor);
   plane2.position.z += 0.1;
 
   const g = new THREE.Group();
@@ -94,7 +100,12 @@ export default {
       this.engine = new MainEngine();
       this.engine.setup(this.canvas, this.width, this.height);
 
-      const planes = new Array(AMT).fill(0).map(() => getPlaneGroup(300, 300));
+      const frontColor = new THREE.Color(getVar("--color-dark-black"));
+      const bgColor = new THREE.Color(getVar("--color-bg"));
+
+      const planes = new Array(AMT)
+        .fill(0)
+        .map(() => getPlaneGroup(300, 300, 4, frontColor, bgColor));
       const group = new THREE.Group();
 
       const range = (AMT - 1) * 35;

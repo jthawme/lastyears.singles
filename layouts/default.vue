@@ -2,6 +2,8 @@
   <div>
     <bug-catch v-if="$store.state.bugCatch" />
 
+    <intro-text />
+
     <DiscreetNav />
 
     <youtube-player v-if="isYoutubeControl" />
@@ -47,9 +49,10 @@ import YoutubePlayer from "~/components/YoutubePlayer.vue";
 import SpotifyPlayer from "~/components/SpotifyPlayer.vue";
 import { PLAYER_CONTROL } from "~/store/player";
 import { getItem } from "~/assets/js/localStorage";
-import { EGO_KEY } from "~/assets/js/constants";
+import { COLOUR_KEY, EGO_KEY } from "~/assets/js/constants";
 import Toast from "~/components/common/Toast.vue";
 import BugCatch from "~/components/BugCatch.vue";
+import IntroText from "~/components/IntroText.vue";
 
 const SITE_TITLE = "Last Years Singles";
 
@@ -68,6 +71,7 @@ export default {
     Ticking: () => import("../components/Animations/Ticking.vue"),
     Lissajous: () => import("../components/Animations/Lissajous.vue"),
     BugCatch,
+    IntroText,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
@@ -91,6 +95,10 @@ export default {
     const ego = getItem(EGO_KEY, true);
     if (ego) {
       this.$store.commit("setEgoTrip", true);
+    }
+    const colour = getItem(COLOUR_KEY, true);
+    if (colour && !isNaN(colour)) {
+      this.$store.commit("cycleColour", colour);
     }
 
     smoothscroll.polyfill();
@@ -145,6 +153,7 @@ export default {
 :root {
   --color-white: #b7babb;
   --color-black: #272727;
+  --color-black-deconstruct: 39, 39, 39;
   --color-dark-black: #000000;
   --color-active: #fdd835;
 
@@ -185,6 +194,21 @@ export default {
   }
 }
 
+html.colour-1 {
+  --color-white: #98e5ff;
+  --color-black-deconstruct: 0, 35, 231;
+  --color-black: #0023e7;
+  --color-dark-black: #5baf7e;
+  --color-active: #ffd900;
+}
+
+html.colour-2 {
+  --color-white: #3b302d;
+  --color-black: #daffe0;
+  --color-black-deconstruct: 218, 255, 224;
+  --color-dark-black: #1200b8;
+  --color-active: #f74d56;
+}
 // ::-webkit-scrollbar {
 //   width: 0px; /* remove scrollbar space */
 //   background: transparent; /* optional: just make scrollbar invisible */

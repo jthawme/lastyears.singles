@@ -6,7 +6,7 @@
 import { makeNoise2D } from "fast-simplex-noise";
 import Canvas from "../common/Canvas.vue";
 import Loop from "raf-loop";
-import { clamp, lerp, mapRange } from "~/assets/js/utils";
+import { clamp, getVar, lerp, mapRange } from "~/assets/js/utils";
 
 const LINES = 5;
 
@@ -56,7 +56,7 @@ export default {
 
       const rand = makeNoise2D();
 
-      this.ctx.strokeStyle = `black`;
+      this.ctx.strokeStyle = getVar("--color-dark-black");
       const update = () => {
         this.ctx.clearRect(0, 0, this.width, this.height);
 

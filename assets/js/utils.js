@@ -164,3 +164,7 @@ export const deg2rad = (angle) => {
 export const lerp = (v0, v1, t) => {
   return v0 * (1 - t) + v1 * t;
 };
+
+export const getVar = (str, el = document.body) => {
+  return getComputedStyle(el).getPropertyValue(str).trim();
+};

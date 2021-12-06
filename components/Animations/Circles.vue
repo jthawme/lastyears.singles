@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { clamp, deg2rad, mapRange } from "~/assets/js/utils";
+import { clamp, deg2rad, getVar, mapRange } from "~/assets/js/utils";
 import * as THREE from "three";
 import { MainEngine } from "~/assets/js/engine";
 import Canvas from "../common/Canvas.vue";
@@ -30,9 +30,14 @@ const getCircle = (r, color = 0xff0000) => {
   return mesh;
 };
 
-const getCircleGroup = (r, stroke = 4) => {
-  const circle1 = getCircle(r, 0x000000);
-  const circle2 = getCircle(r - stroke * 2, 0x272727);
+const getCircleGroup = (
+  r,
+  stroke = 4,
+  frontColor = 0x000000,
+  bgColor = 0x272727
+) => {
+  const circle1 = getCircle(r, frontColor);
+  const circle2 = getCircle(r - stroke * 2, bgColor);
   circle2.position.z += 0.1;
 
   const g = new THREE.Group();
@@ -91,8 +96,14 @@ export default {
 
       this.engine = new MainEngine();
       this.engine.setup(this.canvas, this.width, this.height);
+      const frontColor = new THREE.Color(getVar("--color-dark-black"));
+      const bgColor = new THREE.Color(getVar("--color-bg"));
 
-      const circles = new Array(AMT).fill(0).map(() => getCircleGroup(100, 2));
+      const circles = new Array(AMT)
+        .fill(0)
+        .map(() =>
+          getCircleGroup(100, 2, frontColor.getHex(), bgColor.getHex())
+        );
       const group = new THREE.Group();
 
       const positionArray = [];

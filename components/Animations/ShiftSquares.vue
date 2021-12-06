@@ -5,7 +5,7 @@
 <script>
 import Canvas from "../common/Canvas.vue";
 import Loop from "raf-loop";
-import { clamp, lerp, mapRange } from "~/assets/js/utils";
+import { clamp, getVar, lerp, mapRange } from "~/assets/js/utils";
 
 const COLS = 10;
 const ROWS = 10;
@@ -105,7 +105,7 @@ export default {
       const diff = 2;
       const frames = 200;
 
-      this.ctx.strokeStyle = `black`;
+      this.ctx.strokeStyle = getVar("--color-dark-black");
       const update = () => {
         this.ctx.clearRect(0, 0, this.width, this.height);
         const p = clamp((frame % 100) / 100, 0, 1);

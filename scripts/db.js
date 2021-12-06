@@ -106,6 +106,21 @@ const getSongs = async () => {
   );
 };
 
+const getRandomSong = async (year = 2021, limit = 10) => {
+  const rows = await knex("song")
+    .innerJoin("searched", "searched.song_id", "song.id")
+    .select("song.*", "searched.position", "searched.source", "searched.year")
+    .where("searched.year", year)
+    .orderBy(knex.raw("RANDOM()"))
+    .limit(limit)
+    .then((res) => res);
+
+  return rows.map((row) => ({
+    ...row,
+    spotify_id: row.spotify_id.split("?").shift(),
+  }));
+};
+
 const reduceSongStructure = (songs) => {
   return songs.reduce((prev, curr) => {
     const { positions, ...rest } = curr;
@@ -129,6 +144,7 @@ module.exports = {
   saveSong,
   saveSearched,
   getSongs,
+  getRandomSong,
   reduceSongStructure,
   updateSongPreview,
 };

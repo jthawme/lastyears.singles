@@ -1,4 +1,4 @@
-import { EGO_KEY } from "~/assets/js/constants";
+import { EGO_KEY, COLOUR_KEY } from "~/assets/js/constants";
 import { setItem } from "~/assets/js/localStorage";
 import { Breakpoint } from "~/assets/js/mixins/breakpoints";
 import { NAMES } from "~/scripts/constants";
@@ -13,6 +13,8 @@ export const state = () => {
     playlists: {},
     egoTrip: false,
     bugCatch: false,
+    colour: 0,
+    maxColours: 3,
     breakpoint: {
       [Breakpoint.Desktop]: true,
       [Breakpoint.LargeMobile]: true,
@@ -44,6 +46,12 @@ export const mutations = {
   },
   setBugCatch(state, val) {
     state.bugCatch = val;
+  },
+  cycleColour(state, val) {
+    document.documentElement.classList.remove(`colour-${state.colour}`);
+    state.colour = val;
+    document.documentElement.classList.add(`colour-${val}`);
+    setItem(COLOUR_KEY, val);
   },
 };
 

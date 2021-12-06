@@ -99,7 +99,7 @@ nav {
 
   &:hover,
   &:focus-visible {
-    color: black;
+    color: var(--color-dark-black);
   }
 
   &:before {

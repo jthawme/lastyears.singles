@@ -90,6 +90,21 @@ const getTrack = async (spotifyId) => {
   }
 };
 
+const getTracks = async (spotifyIds) => {
+  try {
+    const spotify = await initialiseSpotify();
+
+    const tracks = await spotify
+      .getTracks(spotifyIds)
+      .then((value) => value.body);
+    return tracks;
+  } catch (e) {
+    return handleSpotifyError(e).then(() => {
+      return getTracks(spotifyIds);
+    });
+  }
+};
+
 let userId = null;
 const getUserId = async (spotify) => {
   if (!userId) {
@@ -191,6 +206,7 @@ const handleSpotifyError = (e, authCode = false) => {
 module.exports = {
   initialiseSpotify,
   getTrack,
+  getTracks,
   getPlaylist,
   getFullPlaylist,
   createPlaylist,
