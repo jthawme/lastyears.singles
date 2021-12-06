@@ -121,7 +121,12 @@ export default {
 
   buildModules: ["@nuxtjs/svg", "@nuxtjs/style-resources"],
 
-  modules: ["@nuxtjs/pwa", "@nuxt/http", "@nuxtjs/markdownit"],
+  modules: [
+    "@nuxtjs/pwa",
+    "@nuxt/http",
+    "@nuxtjs/markdownit",
+    "portal-vue/nuxt",
+  ],
 
   markdownit: {
     injected: true,

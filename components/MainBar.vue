@@ -2,13 +2,14 @@
   <aside :style="{ '--percentage': percentage }">
     <div class="column column-one">
       <div class="column-inner">
-        <button
+        <nuxt-link
           @click="toggleDisplayVisual"
+          :to="currentInternalLink"
+          v-if="currentInternalLink && !currentPage"
           class="action"
-          :class="{ 'action-active': displayVisual }"
         >
           <Icon name="layers" />
-        </button>
+        </nuxt-link>
       </div>
     </div>
 
@@ -34,7 +35,7 @@
           target="_blank"
           v-if="externalLink"
           :href="externalLink"
-          class="action action-active"
+          class="action"
           :class="{ 'action-spotify': !isYoutube }"
         >
           <Icon v-if="isYoutube" name="open" />
@@ -114,6 +115,20 @@ export default {
       return this.currentSong
         ? this.liked.includes(this.currentSong.id)
         : false;
+    },
+    currentInternalLink() {
+      if (this.$store.state.queue.source && this.currentInternalSong) {
+        return `/list/${this.$store.state.queue.source}/#${this.currentInternalSong.id}`;
+      }
+
+      return false;
+    },
+    currentPage() {
+      if (this.$route.path === "/") {
+        return false;
+      }
+
+      return (this.currentInternalLink || "").startsWith(this.$route.path);
     },
     currentInternalSong() {
       return (
@@ -225,9 +240,12 @@ aside {
     "current current current"
     "layers actions save";
 
+  background-color: rgba(39, 39, 39, 0.1);
+  backdrop-filter: blur(1px);
+
   @include tablet {
     display: flex;
-    height: 1px;
+    height: 80px;
     padding: 0 var(--page-padding-x);
   }
 }
@@ -281,7 +299,7 @@ aside {
 
       .column-inner {
         bottom: 30px;
-        color: var(--color-text);
+        // color: var(--color-text);
       }
     }
   }

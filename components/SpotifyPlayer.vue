@@ -2,6 +2,8 @@
 import { getSpotifyAuthoriseUrl } from "~/assets/js/spotify";
 import { SpotifyTokenMixin } from "~/assets/js/spotifyTokenMixin";
 import { listenCb } from "~/assets/js/utils";
+import platform from "platform";
+
 const STATUS = {
   READY: "ready",
   OFFLINE: "offline",
@@ -186,7 +188,10 @@ export default {
       const deviceId = await this.getDeviceId();
 
       if (!deviceId) {
-        if (attempts < 3) {
+        if (platform.os.family === "iOS" || platform.os.family === "Android") {
+          this.$store.commit("bugCatch", true);
+          return;
+        } else if (attempts < 3) {
           this.fallbackTimer = setTimeout(() => {
             this.playSong(song, attempts + 1);
           }, 2500);

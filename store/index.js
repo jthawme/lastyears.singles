@@ -12,6 +12,7 @@ export const state = () => {
     lists: [],
     playlists: {},
     egoTrip: false,
+    bugCatch: false,
     breakpoint: {
       [Breakpoint.Desktop]: true,
       [Breakpoint.LargeMobile]: true,
@@ -40,6 +41,9 @@ export const mutations = {
   setEgoTrip(state, val) {
     state.egoTrip = val;
     setItem(EGO_KEY, true);
+  },
+  setBugCatch(state, val) {
+    state.bugCatch = val;
   },
 };
 

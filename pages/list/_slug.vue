@@ -1,6 +1,8 @@
 <template>
   <div class="main">
-    <nuxt-link class="back std" to="/">⟵ Back</nuxt-link>
+    <portal to="outside">
+      <nuxt-link class="back std" to="/">⟵</nuxt-link>
+    </portal>
     <div class="list">
       <div
         class="item"
@@ -42,6 +44,9 @@ export default {
       }`,
     };
   },
+  mounted() {
+    // this.checkHash();
+  },
   methods: {
     playSong(item) {
       plausible("Song", { props: { song: item.id, source: this.source } });
@@ -59,6 +64,19 @@ export default {
         spotify_id: item.spotify_id,
       });
     },
+    checkHash() {
+      if (window.location.hash) {
+        const id = parseInt(window.location.hash.substring(1), 10);
+
+        if (document.getElementById(id)) {
+          const { offsetTop } = document.getElementById(id);
+
+          console.log(offsetTop);
+
+          window.scrollTo(0, offsetTop);
+        }
+      }
+    },
   },
   computed: {
     playing() {
@@ -71,6 +89,7 @@ export default {
 <style lang="scss" scoped>
 .main {
   padding: var(--page-padding);
+  padding-top: calc(var(--page-padding-y) * 2);
 }
 
 .list {
@@ -94,13 +113,37 @@ export default {
 }
 
 .back {
-  position: sticky;
+  position: fixed;
 
   top: var(--page-padding-y);
+  left: var(--page-padding-x);
   color: inherit;
 
   text-decoration: none;
 
   margin-bottom: 3em;
+
+  z-index: 10;
+
+  user-select: none;
+
+  &:after {
+    content: "Back";
+
+    margin-left: 0.8ch;
+    opacity: 0;
+
+    // transition: {
+    //   duration: 0.25s;
+    //   property: opacity;
+    // }
+  }
+
+  &:hover,
+  &:focus-visible {
+    &:after {
+      opacity: 1;
+    }
+  }
 }
 </style>

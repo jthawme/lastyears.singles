@@ -1,9 +1,13 @@
 <template>
   <div>
+    <bug-catch v-if="$store.state.bugCatch" />
+
     <DiscreetNav />
 
     <youtube-player v-if="isYoutubeControl" />
     <spotify-player v-if="isSpotifyControl" />
+
+    <portal-target name="outside"></portal-target>
 
     <main :class="{ hide: idle && playing && displayVisual }">
       <nuxt />
@@ -45,7 +49,7 @@ import { PLAYER_CONTROL } from "~/store/player";
 import { getItem } from "~/assets/js/localStorage";
 import { EGO_KEY } from "~/assets/js/constants";
 import Toast from "~/components/common/Toast.vue";
-import Lissajous from "../components/Animations/Lissajous.vue";
+import BugCatch from "~/components/BugCatch.vue";
 
 const SITE_TITLE = "Last Years Singles";
 
@@ -63,7 +67,7 @@ export default {
     ShiftSquares: () => import("../components/Animations/ShiftSquares.vue"),
     Ticking: () => import("../components/Animations/Ticking.vue"),
     Lissajous: () => import("../components/Animations/Lissajous.vue"),
-    Lissajous,
+    BugCatch,
   },
   mixins: [BreakPointSet, SpotifyMixin, SavedMixin],
   head() {
@@ -95,6 +99,7 @@ export default {
 
     listenCb(document, "mousemove", tickUpdate(this.idleChecker.bind(this)));
     listenCb(document, "scroll", tickUpdate(this.idleChecker.bind(this)));
+    listenCb(window, "focus", tickUpdate(this.idleChecker.bind(this)));
   },
   computed: {
     playerControl() {
@@ -263,6 +268,9 @@ main {
   z-index: 2;
 
   padding-bottom: 100px;
+
+  max-width: 100vw;
+  overflow-x: hidden;
 
   transition: {
     duration: 1s;

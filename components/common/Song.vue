@@ -6,6 +6,7 @@
       :role="interactive ? 'button' : ''"
       :tabindex="interactive && !isPlaying ? 0 : -1"
     >
+      <div class="anchor" :id="id" />
       <text-mutate
         :autoPlay="false"
         :show="show"
@@ -138,6 +139,12 @@ export default {
 
   outline: 0;
   max-width: 100%;
+
+  .anchor {
+    position: absolute;
+
+    top: -50px;
+  }
 
   &.active {
     color: var(--color-active);

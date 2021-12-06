@@ -23,7 +23,6 @@ export const SpotifyTokenMixin = {
      * @param {number} expires
      */
     setToken(token, refresh, expires) {
-      console.log("yea?");
       this.$store.commit("spotify/setSpotifyToken", token);
       this.$store.commit("spotify/setRefreshToken", refresh);
       this.$store.commit(

@@ -14,6 +14,7 @@ import skipbackward from "~/assets/img/icons/skipbackward.svg?inline";
 import skipforward from "~/assets/img/icons/skipforward.svg?inline";
 import open from "~/assets/img/icons/open.svg?inline";
 import x from "~/assets/img/icons/x.svg?inline";
+import arrowback from "~/assets/img/icons/arrowback.svg?inline";
 
 const icons = {
   pause,
@@ -25,6 +26,7 @@ const icons = {
   skipforward,
   open,
   x,
+  arrowback,
 };
 
 export const iconKeys = Object.keys(icons);

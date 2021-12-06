@@ -54,8 +54,6 @@ export const SpotifyMixin = {
       if (prevToken) {
         const [expires, token, refresh] = prevToken.split(":");
 
-        console.log(expires, token, refresh);
-
         if (
           !isNaN(parseInt(expires)) &&
           Date.now() < parseInt(expires) &&
