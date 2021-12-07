@@ -23,31 +23,22 @@ export default {
   },
   mounted() {
     this.debug = window.location.host.includes("localhost");
-    console.log("1a");
     this.getCurrent();
-    console.log("1b");
     this.mountPlayerSdk();
-    console.log("1c");
   },
   methods: {
     async checkDeviceBug() {
-      console.log("2a");
       let deviceId = null;
       try {
         deviceId = await this.getDeviceId();
-        console.log("2b");
       } catch {
       } finally {
-        console.log("2c");
-
-        console.log(deviceId, platform.os.family);
-
         if (!deviceId) {
           if (
             platform.os.family === "iOS" ||
             platform.os.family === "Android"
           ) {
-            this.$store.commit("bugCatch", true);
+            this.$store.commit("setBugCatch", true);
           }
         }
         console.log("2d");
@@ -55,7 +46,7 @@ export default {
     },
     deviceError() {
       if (platform.os.family === "iOS" || platform.os.family === "Android") {
-        this.$store.commit("bugCatch", true);
+        this.$store.commit("setBugCatch", true);
         return;
       }
     },
@@ -194,8 +185,6 @@ export default {
       try {
         const { devices } = await this.spotify.getMyDevices();
 
-        console.log("devices", devices);
-
         if (this.deviceId) {
           const oldDevice = devices.find((d) => d.id === this.deviceId);
 
@@ -252,7 +241,7 @@ export default {
 
       if (!deviceId) {
         if (platform.os.family === "iOS" || platform.os.family === "Android") {
-          this.$store.commit("bugCatch", true);
+          this.$store.commit("setBugCatch", true);
           return;
         } else if (attempts < 3) {
           this.fallbackTimer = setTimeout(() => {
