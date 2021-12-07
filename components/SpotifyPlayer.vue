@@ -41,7 +41,6 @@ export default {
             this.$store.commit("setBugCatch", true);
           }
         }
-        console.log("2d");
       }
     },
     deviceError() {
@@ -83,7 +82,6 @@ export default {
       });
 
       this.webPlayer.addListener("ready", ({ device_id }) => {
-        console.log("ever make it here?");
         // weird no audio fix
         const iframe = document.querySelector(
           'iframe[src="https://sdk.scdn.co/embedded/index.html"]'
