@@ -23,17 +23,32 @@ export default {
   },
   mounted() {
     this.debug = window.location.host.includes("localhost");
+    console.log("1a");
     this.getCurrent();
+    console.log("1b");
     this.mountPlayerSdk();
+    console.log("1c");
   },
   methods: {
     async checkDeviceBug() {
-      const deviceId = await this.getDeviceId();
+      console.log("2a");
+      let deviceId = null;
+      try {
+        deviceId = await this.getDeviceId();
+        console.log("2b");
+      } catch {
+      } finally {
+        console.log("2c");
 
-      if (!deviceId) {
-        if (platform.os.family === "iOS" || platform.os.family === "Android") {
-          this.$store.commit("bugCatch", true);
+        if (!deviceId) {
+          if (
+            platform.os.family === "iOS" ||
+            platform.os.family === "Android"
+          ) {
+            this.$store.commit("bugCatch", true);
+          }
         }
+        console.log("2d");
       }
     },
     deviceError() {
