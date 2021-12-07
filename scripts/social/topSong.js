@@ -9,7 +9,7 @@ const { exec } = require("child_process");
 
 const publicImage = (file) => path.join(__dirname, "../public/images/", file);
 
-const YEAR = 2020;
+const YEAR = 2021;
 
 initialiseSpotify(true).then(async () => {
   const songs = await getSongs();
@@ -48,7 +48,7 @@ initialiseSpotify(true).then(async () => {
       time: 2.5,
       data: {
         text: `${topTrack.title}\n\n${topTrack.artists.join("\n")}`,
-        scale: 0.08,
+        scale: 0.1,
       },
     },
     ...topTrack.positions.map((position) => ({
@@ -56,7 +56,7 @@ initialiseSpotify(true).then(async () => {
       time: 0.5,
       data: {
         text: `${NAMES[position.source]}\n${ordinalSuffix(position.position)}`,
-        scale: 0.08,
+        scale: 0.1,
       },
     })),
   ]);

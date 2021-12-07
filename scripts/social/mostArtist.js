@@ -6,7 +6,7 @@ const { initialiseSpotify, getArtistByName } = require("../spotify");
 const { exec } = require("child_process");
 const { COLORS } = require("../constants");
 
-const YEAR = 2020;
+const YEAR = 2021;
 
 const clamp = (num, min, max) => {
   return Math.min(Math.max(num, min), max);

@@ -27,6 +27,15 @@ export default {
     this.mountPlayerSdk();
   },
   methods: {
+    async checkDeviceBug() {
+      const deviceId = await this.getDeviceId();
+
+      if (!deviceId) {
+        if (platform.os.family === "iOS" || platform.os.family === "Android") {
+          this.$store.commit("bugCatch", true);
+        }
+      }
+    },
     deviceError() {
       if (platform.os.family === "iOS" || platform.os.family === "Android") {
         this.$store.commit("bugCatch", true);
@@ -66,6 +75,7 @@ export default {
       });
 
       this.webPlayer.addListener("ready", ({ device_id }) => {
+        console.log("ever make it here?");
         // weird no audio fix
         const iframe = document.querySelector(
           'iframe[src="https://sdk.scdn.co/embedded/index.html"]'
@@ -125,6 +135,10 @@ export default {
       });
 
       this.webPlayer.connect();
+
+      setTimeout(() => {
+        this.checkDeviceBug();
+      }, 1000);
     },
     onTime(percentage) {
       this.log("[Running] onTime");

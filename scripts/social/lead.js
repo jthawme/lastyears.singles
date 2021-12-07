@@ -16,14 +16,14 @@ const mapRange = (value, x1, y1, x2, y2) =>
   ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
 
 initialiseSpotify(true).then(async () => {
-  const songs = await getRandomSong(YEAR, 20);
+  const songs = await getRandomSong(YEAR, 30);
 
   const { tracks } = await getTracks(songs.map((song) => song.spotify_id));
 
   const frames = [
     {
       type: "text",
-      time: 2,
+      time: 1.5,
       data: {
         text: `Listen to the last year's greatest songs`,
       },
@@ -40,20 +40,22 @@ initialiseSpotify(true).then(async () => {
     }),
     {
       type: "text",
-      time: 2,
+      time: 1.5,
       data: {
         text: "From the greatest music publications on the internet",
         scale: 0.08,
         maxWidth: 0.75,
       },
     },
-    ...Object.values(NAMES).map((name) => ({
-      type: "text",
-      time: 0.2,
-      data: {
-        text: name,
-      },
-    })),
+    ...Object.values(NAMES)
+      .filter((name) => name !== NAMES[SOURCE.BIG_J_THE_WIZARD_KING])
+      .map((name) => ({
+        type: "text",
+        time: 0.2,
+        data: {
+          text: name,
+        },
+      })),
   ];
 
   const video1 = await makeAnimation(frames, COLORS[4], "WIDE", "output1.mp4");
