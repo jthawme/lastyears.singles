@@ -40,6 +40,8 @@ export default {
       } finally {
         console.log("2c");
 
+        console.log(deviceId, platform.os.family);
+
         if (!deviceId) {
           if (
             platform.os.family === "iOS" ||
@@ -191,6 +193,8 @@ export default {
 
       try {
         const { devices } = await this.spotify.getMyDevices();
+
+        console.log("devices", devices);
 
         if (this.deviceId) {
           const oldDevice = devices.find((d) => d.id === this.deviceId);
