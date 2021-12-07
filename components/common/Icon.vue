@@ -16,6 +16,8 @@ import open from "~/assets/img/icons/open.svg?inline";
 import x from "~/assets/img/icons/x.svg?inline";
 import arrowback from "~/assets/img/icons/arrowback.svg?inline";
 import refresh from "~/assets/img/icons/refresh.svg?inline";
+import sync from "~/assets/img/icons/sync.svg?inline";
+import egg from "~/assets/img/icons/egg.svg?inline";
 
 const icons = {
   pause,
@@ -29,6 +31,8 @@ const icons = {
   x,
   arrowback,
   refresh,
+  sync,
+  egg,
 };
 
 export const iconKeys = Object.keys(icons);

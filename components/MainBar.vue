@@ -4,7 +4,7 @@
       <div class="column-inner">
         <button @click="cycleColour" class="action">
           <!-- <Icon name="layers" /> -->
-          <Icon name="refresh" />
+          <Icon name="sync" />
         </button>
       </div>
     </div>

@@ -203,7 +203,7 @@ export default {
   }
 }
 
-html.colour-1 {
+.colour-1 {
   --color-white: #98e5ff;
   --color-black-deconstruct: 0, 35, 231;
   --color-black: #0023e7;
@@ -211,7 +211,7 @@ html.colour-1 {
   --color-active: #ffd900;
 }
 
-html.colour-2 {
+.colour-2 {
   --color-white: #3b302d;
   --color-black: #daffe0;
   --color-black-deconstruct: 218, 255, 224;

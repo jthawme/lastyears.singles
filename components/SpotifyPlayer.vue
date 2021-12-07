@@ -84,6 +84,12 @@ export default {
         });
       });
 
+      this.webPlayer.on("initialization_error", ({ message }) => {
+        plausible("Spotify Error", { props: { message } });
+
+        this.$store.commit("bugCatch", true);
+      });
+
       this.webPlayer.on("authentication_error", () => {
         this.$store.commit("toast/addToast", {
           message: "Connection to spotify failed, connect again to continue!",
