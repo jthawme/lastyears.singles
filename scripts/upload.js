@@ -43,7 +43,7 @@ const runUploadServer = (items, source, year) => {
         } else {
           const { youtubeLink, title, artist, position } = items[itemIdx];
 
-          const prev = await getSearched(title, artist, source);
+          const prev = await getSearched(title, artist, source, year);
 
           if (prev) {
             if (prev.position !== parseInt(position)) {
@@ -138,7 +138,7 @@ const runUpload = (items, source, year) => {
 
       const { youtubeLink, title, artist, position } = items[idx];
 
-      const prev = await getSearched(title, artist, source);
+      const prev = await getSearched(title, artist, source, year);
 
       if (prev) {
         next(idx + 1);

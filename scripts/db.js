@@ -2,12 +2,13 @@ const config = require("../knexfile");
 const { getTrack } = require("./spotify");
 const knex = require("knex")(config.development);
 
-const getSearched = async (title, artist, source) => {
+const getSearched = async (title, artist, source, year) => {
   const result = await knex("searched")
     .where({
       title,
       artist,
       source,
+      year,
     })
     .first()
     .then((result) => result);

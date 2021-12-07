@@ -4,6 +4,7 @@ const cheerio = require("cheerio");
 const { runUpload, runUploadServer } = require("../upload");
 const { SOURCE } = require("../constants");
 
+// const targetUrl = "https://www.billboard.com/charts/year-end/2020/hot-100-songs/";
 const targetUrl = "https://www.billboard.com/charts/year-end/hot-100-songs/";
 
 const run = async () => {
@@ -26,7 +27,7 @@ const run = async () => {
     });
   });
 
-  await runUploadServer(songs.reverse(), SOURCE.BILLBOARD, 2020);
+  await runUploadServer(songs.reverse(), SOURCE.BILLBOARD, 2021);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 
