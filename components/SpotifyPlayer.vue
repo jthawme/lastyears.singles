@@ -23,10 +23,22 @@ export default {
   },
   mounted() {
     this.debug = window.location.host.includes("localhost");
-    this.mountPlayerSdk();
     this.getCurrent();
+    this.mountPlayerSdk();
   },
   methods: {
+    deviceError() {
+      if (platform.os.family === "iOS" || platform.os.family === "Android") {
+        this.$store.commit("bugCatch", true);
+        return;
+      }
+    },
+    autoPlayHack() {
+      const unlisten = listenCb(document, "click", () => {
+        this.webPlayer.activateElement();
+        unlisten();
+      });
+    },
     mountPlayerSdk() {
       this.log("[Running] mountPlayerSdk");
       if (!document.querySelector("#playersdk")) {
@@ -36,6 +48,9 @@ export default {
         const scriptEl = document.createElement("script");
         scriptEl.id = "playersdk";
         scriptEl.src = `https://sdk.scdn.co/spotify-player.js`;
+        scriptEl.onerror = () => {
+          this.deviceError();
+        };
         document.body.appendChild(scriptEl);
       }
     },
@@ -77,26 +92,35 @@ export default {
 
       this.webPlayer.addListener("autoplay_failed", () => {
         console.log("Autoplay is not allowed by the browser autoplay rules");
-
-        const unlisten = listenCb(document, "click", () => {
-          this.webPlayer.activateElement();
-          unlisten();
-        });
+        this.autoPlayHack();
       });
 
       this.webPlayer.on("initialization_error", ({ message }) => {
         plausible("Spotify Error", { props: { message } });
 
-        this.$store.commit("bugCatch", true);
+        this.deviceError();
       });
 
-      this.webPlayer.on("authentication_error", () => {
-        this.$store.commit("toast/addToast", {
-          message: "Connection to spotify failed, connect again to continue!",
-          action: {
-            to: this.$store.state.spotify.spotifyAuthoriseUrl,
-            label: "Connect Spotify",
-          },
+      this.webPlayer.on("authentication_error", (e) => {
+        if (
+          e.message === "Browser prevented autoplay due to lack of interaction"
+        ) {
+          this.autoPlayHack();
+          return;
+        }
+        this.setupAuthorise();
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            this.$store.commit("toast/addToast", {
+              message:
+                "Connection to spotify failed, connect again to continue!",
+              action: {
+                to: this.$store.state.spotify.spotifyAuthoriseUrl,
+                label: "Connect Spotify",
+              },
+            });
+          });
         });
       });
 

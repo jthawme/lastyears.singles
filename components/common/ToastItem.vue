@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     actionComponent() {
-      return this.action && !this.action.to.startsWith("http")
+      return this.action && this.action.to && !this.action.to.startsWith("http")
         ? "nuxt-link"
         : "a";
     },

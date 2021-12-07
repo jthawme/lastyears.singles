@@ -221,6 +221,7 @@ export default {
       }
     },
     cycleColour() {
+      plausible("Colour Cycle");
       this.$store.commit(
         "cycleColour",
         (this.$store.state.colour + 1) % this.$store.state.maxColours

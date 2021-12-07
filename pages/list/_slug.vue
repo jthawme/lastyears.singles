@@ -6,15 +6,11 @@
     <div class="list">
       <div
         class="item"
-        v-for="(item, idx) in items"
+        v-for="item in items"
         :key="item.id"
         :style="{ '--column': item.column }"
       >
-        <Song
-          v-bind="item"
-          :positions="items.length - idx"
-          @click.native="() => playSong(item)"
-        />
+        <Song v-bind="item" @click.native="() => playSong(item)" />
       </div>
     </div>
   </div>

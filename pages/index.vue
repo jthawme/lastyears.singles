@@ -6,6 +6,7 @@
       <nuxt-link
         v-for="list in year[1]"
         class="std"
+        :class="{ hide: hideEgoTrip(list.slug) }"
         :to="`/list/${list.slug}`"
         :key="list.slug"
         >{{ list.name }}</nuxt-link
@@ -64,9 +65,9 @@ export default {
           prev[curr.year] = [];
         }
 
-        if (!curr.slug.includes(SOURCE.BIG_J_THE_WIZARD_KING) || this.egoTrip) {
-          prev[curr.year].push(curr);
-        }
+        // if (!curr.slug.includes(SOURCE.BIG_J_THE_WIZARD_KING) || this.egoTrip) {
+        prev[curr.year].push(curr);
+        // }
 
         return prev;
       }, {});
@@ -77,6 +78,9 @@ export default {
     },
   },
   methods: {
+    hideEgoTrip(slug) {
+      return slug.includes(SOURCE.BIG_J_THE_WIZARD_KING) && !this.egoTrip;
+    },
     notCurrent(year) {
       return parseInt(year) !== new Date().getFullYear();
     },
@@ -117,6 +121,10 @@ export default {
   align-items: flex-start;
 
   margin-bottom: 2em;
+}
+
+.hide {
+  display: none;
 }
 
 .year {

@@ -1,5 +1,11 @@
 const inquirer = require("inquirer");
-const { saveSong, saveSearched, getSearched, getSongs } = require("./db");
+const {
+  saveSong,
+  saveSearched,
+  updateSearched,
+  getSearched,
+  getSongs,
+} = require("./db");
 const Bundler = require("parcel-bundler");
 const express = require("express");
 const path = require("path");
@@ -40,6 +46,12 @@ const runUploadServer = (items, source, year) => {
           const prev = await getSearched(title, artist, source);
 
           if (prev) {
+            if (prev.position !== parseInt(position)) {
+              await updateSearched(prev.id, {
+                position,
+              });
+            }
+
             itemIdx++;
             return getNext();
           }

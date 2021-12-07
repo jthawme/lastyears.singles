@@ -1,6 +1,14 @@
-import { getRedirectURI, getSpotify } from "./spotify";
+import { nanoid } from "nanoid";
+import { STATE_KEY } from "./constants";
+import { setItem } from "./localStorage";
+import { getRedirectURI, getSpotify, getSpotifyAuthoriseUrl } from "./spotify";
 
 export const SpotifyTokenMixin = {
+  data() {
+    return {
+      stateToken: nanoid(),
+    };
+  },
   methods: {
     async exchangeToken(code) {
       const { access_token, refresh_token, expires_in } =
@@ -41,6 +49,17 @@ export const SpotifyTokenMixin = {
 
       this.setToken(access_token, refresh, expires_in);
       return access_token;
+    },
+
+    /**
+     * If not logged in setup the scene to allow for the authorisation URL
+     */
+    setupAuthorise() {
+      setItem(STATE_KEY, this.stateToken);
+      this.$store.commit(
+        "spotify/setSpotifyAuthoriseUrl",
+        getSpotifyAuthoriseUrl(this.stateToken)
+      );
     },
   },
 };

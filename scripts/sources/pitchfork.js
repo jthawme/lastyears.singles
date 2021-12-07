@@ -4,8 +4,10 @@ const cheerio = require("cheerio");
 const { runUpload, runUploadServer } = require("../upload");
 const { SOURCE } = require("../constants");
 
+// const targetUrl =
+//   "https://pitchfork.com/features/lists-and-guides/best-songs-2020/";
 const targetUrl =
-  "https://pitchfork.com/features/lists-and-guides/best-songs-2020/";
+  "https://pitchfork.com/features/lists-and-guides/best-songs-2021/";
 
 const run = async () => {
   const code = await fetch(targetUrl).then((resp) => resp.text());
@@ -42,7 +44,7 @@ const run = async () => {
     });
   });
 
-  runUploadServer(songs, SOURCE.PITCHFORK, 2020);
+  runUploadServer(songs, SOURCE.PITCHFORK, 2021);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 

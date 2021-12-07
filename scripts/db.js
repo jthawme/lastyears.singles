@@ -77,6 +77,10 @@ const saveSearched = async (songId, title, artist, source, position, year) => {
   });
 };
 
+const updateSearched = async (id, data) => {
+  return knex("searched").update(data).where({ id });
+};
+
 const getSongs = async () => {
   const rows = await knex("song")
     .innerJoin("searched", "searched.song_id", "song.id")
@@ -143,6 +147,7 @@ module.exports = {
   getSearched,
   saveSong,
   saveSearched,
+  updateSearched,
   getSongs,
   getRandomSong,
   reduceSongStructure,

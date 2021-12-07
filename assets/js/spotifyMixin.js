@@ -24,7 +24,6 @@ export const SpotifyMixin = {
   data() {
     return {
       spotifyToken: null,
-      stateToken: nanoid(),
     };
   },
   methods: {
@@ -103,17 +102,6 @@ export const SpotifyMixin = {
       }
 
       return Promise.resolve(false);
-    },
-
-    /**
-     * If not logged in setup the scene to allow for the authorisation URL
-     */
-    setupAuthorise() {
-      setItem(STATE_KEY, this.stateToken);
-      this.$store.commit(
-        "spotify/setSpotifyAuthoriseUrl",
-        getSpotifyAuthoriseUrl(this.stateToken)
-      );
     },
   },
   computed: {
