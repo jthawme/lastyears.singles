@@ -27,24 +27,26 @@ export default {
     this.mountPlayerSdk();
   },
   methods: {
-    async checkDeviceBug() {
-      let deviceId = null;
-      try {
-        deviceId = await this.getDeviceId();
-      } catch {
-      } finally {
-        if (!deviceId) {
-          if (
-            platform.os.family === "iOS" ||
-            platform.os.family === "Android"
-          ) {
-            this.$store.commit("setBugCatch", true);
-          }
-        }
-      }
-    },
+    // async checkDeviceBug() {
+    //   let deviceId = null;
+    //   try {
+    //     deviceId = await this.getDeviceId();
+    //   } catch {
+    //   } finally {
+    //     if (!deviceId) {
+    //       if (
+    //         platform.os.family === "iOS" ||
+    //         platform.os.family === "Android"
+    //       ) {
+    //         console.log("set during check device bug");
+    //         this.$store.commit("setBugCatch", true);
+    //       }
+    //     }
+    //   }
+    // },
     deviceError() {
       if (platform.os.family === "iOS" || platform.os.family === "Android") {
+        console.log("set during deviceError");
         this.$store.commit("setBugCatch", true);
         return;
       }
@@ -142,9 +144,9 @@ export default {
 
       this.webPlayer.connect();
 
-      setTimeout(() => {
-        this.checkDeviceBug();
-      }, 1000);
+      // setTimeout(() => {
+      //   this.checkDeviceBug();
+      // }, 1000);
     },
     onTime(percentage) {
       this.log("[Running] onTime");
@@ -239,6 +241,7 @@ export default {
 
       if (!deviceId) {
         if (platform.os.family === "iOS" || platform.os.family === "Android") {
+          console.log("set during playsong");
           this.$store.commit("setBugCatch", true);
           return;
         } else if (attempts < 3) {
