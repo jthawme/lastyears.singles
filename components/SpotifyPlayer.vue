@@ -46,7 +46,7 @@ export default {
     // },
     deviceError() {
       if (platform.os.family === "iOS" || platform.os.family === "Android") {
-        console.log("set during deviceError");
+        // console.log("set during deviceError");
         this.$store.commit("setBugCatch", true);
         return;
       }
@@ -66,9 +66,6 @@ export default {
         const scriptEl = document.createElement("script");
         scriptEl.id = "playersdk";
         scriptEl.src = `https://sdk.scdn.co/spotify-player.js`;
-        scriptEl.onerror = () => {
-          this.deviceError();
-        };
         document.body.appendChild(scriptEl);
       }
     },
@@ -116,7 +113,7 @@ export default {
       this.webPlayer.on("initialization_error", ({ message }) => {
         plausible("Spotify Error", { props: { message } });
 
-        this.deviceError();
+        // this.deviceError();
       });
 
       this.webPlayer.on("authentication_error", (e) => {
@@ -241,7 +238,7 @@ export default {
 
       if (!deviceId) {
         if (platform.os.family === "iOS" || platform.os.family === "Android") {
-          console.log("set during playsong");
+          // console.log("set during playsong");
           this.$store.commit("setBugCatch", true);
           return;
         } else if (attempts < 3) {
