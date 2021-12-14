@@ -34,6 +34,12 @@ const getCube = (s, color = 0xff0000) => {
 
 export default {
   components: { Canvas },
+  props: {
+    forcePlay: {
+      type: Boolean,
+      default: false,
+    },
+  },
   mounted() {
     if (!this.unlisten) {
       this.unlisten = [];
@@ -106,7 +112,7 @@ export default {
 
       this.engine.move(this.group, 0.5, 0.5);
       this.engine.render(() => {
-        if (this.playing) {
+        if (this.playing || this.forcePlay) {
           cubes.forEach((cube) => {
             cube.rotation.x += deg2rad(1);
             cube.rotation.y += deg2rad(1);

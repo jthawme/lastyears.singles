@@ -6,16 +6,25 @@
 
 <script>
 export default {
-  data() {
-    return {
-      index: 0,
-      parts: [
+  props: {
+    loop: {
+      type: Boolean,
+      default: false,
+    },
+    parts: {
+      type: Array,
+      default: () => [
         "",
         "Listen to the greatest music",
         "from the last year",
         "from the greatest sources",
         "on the internet",
       ],
+    },
+  },
+  data() {
+    return {
+      index: 0,
     };
   },
   mounted() {
@@ -26,7 +35,7 @@ export default {
       clearTimeout(this.timer);
 
       this.timer = setTimeout(() => {
-        if (this.index > this.parts.length) {
+        if (this.index > this.parts.length && !this.loop) {
           this.$emit("done");
         } else {
           this.index++;
@@ -37,7 +46,9 @@ export default {
   },
   computed: {
     text() {
-      return this.parts[this.index];
+      return this.parts[
+        this.loop ? this.index % this.parts.length : this.index
+      ];
     },
   },
 };
@@ -57,6 +68,7 @@ export default {
   padding: 0 var(--page-padding-x);
 
   transform: translate3d(-50%, -50%, 0);
+  pointer-events: none;
 
   text-align: center;
   color: var(--color-active);

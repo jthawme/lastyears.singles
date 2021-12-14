@@ -1,35 +1,8 @@
 <template>
   <div>
-    <bug-catch v-if="$store.state.bugCatch" />
-
-    <intro-text />
-
-    <DiscreetNav />
-
-    <youtube-player v-if="isYoutubeControl" />
-    <spotify-player v-if="isSpotifyControl" />
-
-    <portal-target name="outside"></portal-target>
-
-    <main :class="{ hide: idle && playing && displayVisual }">
+    <main>
       <nuxt />
     </main>
-
-    <transition name="fade" mode="out-in">
-      <Squares v-if="isSource('pitchfork') && displayVisual" />
-      <Circles v-if="isSource('nme') && displayVisual" />
-      <Field v-if="isSource('the-fader') && displayVisual" />
-      <ShiftSquares v-if="isSource('billboard') && displayVisual" />
-      <Ticking v-if="isSource('npr') && displayVisual" />
-      <CircleWaves v-if="isSource('triple-j')" />
-      <Lissajous v-if="isSource('consequence-of-sound')" />
-      <World v-if="isSource('big-j-the-wizard-king')" />
-      <Swell v-if="isSource('complex')" />
-    </transition>
-
-    <MainBar />
-
-    <Toast />
   </div>
 </template>
 
@@ -160,11 +133,11 @@ export default {
 @import "../assets/scss/parts/fonts";
 
 :root {
-  --color-white: #98e5ff;
-  --color-black-deconstruct: 0, 35, 231;
-  --color-black: #0023e7;
-  --color-dark-black: #5baf7e;
-  --color-active: #ffd900;
+  --color-white: #b7babb;
+  --color-black: #272727;
+  --color-black-deconstruct: 39, 39, 39;
+  --color-dark-black: #000000;
+  --color-active: #fdd835;
 
   --color-text: var(--color-white);
   --color-bg: var(--color-black);
@@ -204,11 +177,11 @@ export default {
 }
 
 .colour-1 {
-  --color-white: #b7babb;
-  --color-black: #272727;
-  --color-black-deconstruct: 39, 39, 39;
-  --color-dark-black: #000000;
-  --color-active: #fdd835;
+  --color-white: #98e5ff;
+  --color-black-deconstruct: 0, 35, 231;
+  --color-black: #0023e7;
+  --color-dark-black: #5baf7e;
+  --color-active: #ffd900;
 }
 
 .colour-2 {
