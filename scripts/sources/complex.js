@@ -4,7 +4,8 @@ const cheerio = require("cheerio");
 const { runUpload, runUploadServer } = require("../upload");
 const { SOURCE } = require("../constants");
 
-const targetUrl = "https://www.complex.com/music/best-songs-2020/";
+// const targetUrl = "https://www.complex.com/music/best-songs-2020/";
+const targetUrl = "https://www.complex.com/music/best-songs-of-2021/";
 
 const run = async () => {
   const code = await fetch(targetUrl).then((resp) => resp.text());
@@ -29,7 +30,7 @@ const run = async () => {
     song.position = arr.length - idx;
   });
 
-  await runUploadServer(songs, SOURCE.COMPLEX, 2020);
+  await runUploadServer(songs, SOURCE.COMPLEX, 2021);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 
