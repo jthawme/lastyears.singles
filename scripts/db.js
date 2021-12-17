@@ -111,11 +111,14 @@ const getSongs = async () => {
   );
 };
 
-const getRandomSong = async (year = 2021, limit = 10) => {
+const getRandomSong = async (year = 2021, limit = 10, where = {}) => {
   const rows = await knex("song")
     .innerJoin("searched", "searched.song_id", "song.id")
     .select("song.*", "searched.position", "searched.source", "searched.year")
-    .where("searched.year", year)
+    .where({
+      "searched.year": year,
+      ...where,
+    })
     .orderBy(knex.raw("RANDOM()"))
     .limit(limit)
     .then((res) => res);
