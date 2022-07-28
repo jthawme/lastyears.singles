@@ -38,11 +38,12 @@ export default {
   methods: {
     playSong(item) {
       plausible("Song", { props: { song: item.id, source: "your-songs" } });
+
       this.$store.commit("player/toggleShouldPlay", true);
       this.$store.commit("queue/createQueue", {
-        items: this.songs,
+        items: this.expandedSongs,
         source: "your-songs",
-        position: this.songs.findIndex((i) => i.id === item.id),
+        position: this.expandedSongs.findIndex((i) => i.id === item.id),
       });
     },
   },
