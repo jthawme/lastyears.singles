@@ -16,16 +16,11 @@ const mapRange = (value, x1, y1, x2, y2) =>
   ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
 
 initialiseSpotify(true).then(async () => {
-  const songs1 = await getRandomSong(YEAR, 8, {
-    "searched.source": SOURCE.THE_FADER,
-  });
-  const songs2 = await getRandomSong(YEAR, 8, {
-    "searched.source": SOURCE.COMPLEX,
+  const songs1 = await getRandomSong(YEAR, 20, {
+    "searched.source": SOURCE.TRIPLE_J,
   });
 
-  const { tracks } = await getTracks(
-    [...songs1, ...songs2].map((song) => song.spotify_id)
-  );
+  const { tracks } = await getTracks(songs1.map((song) => song.spotify_id));
 
   const frames = [
     {
@@ -40,15 +35,7 @@ initialiseSpotify(true).then(async () => {
       type: "text",
       time: 1,
       data: {
-        text: NAMES[SOURCE.THE_FADER],
-        scale: 0.2,
-      },
-    },
-    {
-      type: "text",
-      time: 1,
-      data: {
-        text: NAMES[SOURCE.COMPLEX],
+        text: NAMES[SOURCE.TRIPLE_J],
         scale: 0.2,
       },
     },
@@ -65,15 +52,15 @@ initialiseSpotify(true).then(async () => {
   ];
 
   // const video1 = await makeAnimation(frames, COLORS[4], "WIDE", "output1.mp4");
-  const video2 = await makeAnimation(
+  const video1 = await makeAnimation(
     frames,
-    COLORS[3],
+    COLORS[2],
     "SQUARE",
     "output2.mp4"
   );
 
   // exec(`open ${video1}`);
-  exec(`open ${video2}`);
+  exec(`open ${video1}`);
 
   process.exit();
 });
