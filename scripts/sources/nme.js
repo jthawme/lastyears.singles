@@ -6,8 +6,10 @@ const { SOURCE } = require("../constants");
 
 // const targetUrl =
 //   "https://www.nme.com/features/nme-best-songs-of-the-year-2020-2833773";
+// const targetUrl =
+// "https://www.nme.com/features/music-features/nme-best-songs-of-the-year-2021-3112636";
 const targetUrl =
-  "https://www.nme.com/features/music-features/nme-best-songs-of-the-year-2021-3112636";
+  "https://www.nme.com/features/music-features/the-50-best-songs-of-2022-3358809";
 
 const run = async () => {
   const code = await fetch(targetUrl).then((resp) => resp.text());
@@ -28,7 +30,7 @@ const run = async () => {
     });
   });
 
-  await runUploadServer(songs, SOURCE.NME, 2021);
+  await runUploadServer(songs, SOURCE.NME, 2022);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 

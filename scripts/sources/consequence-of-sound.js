@@ -12,8 +12,12 @@ const { SOURCE } = require("../constants");
 //   "https://consequence.net/2020/12/top-50-songs-of-2020/6/",
 // ];
 
+// const targetUrls = [
+//   "https://consequence.net/2021/12/top-50-songs-2021-list/12/",
+// ];
+
 const targetUrls = [
-  "https://consequence.net/2021/12/top-50-songs-2021-list/12/",
+  "https://consequence.net/2022/12/top-50-songs-2022-list/8/",
 ];
 
 const run = async () => {
@@ -79,7 +83,7 @@ const run = async () => {
 
   const data = await Promise.all(targetUrls.map((url, idx) => getPage(idx)));
 
-  await runUploadServer(data.flat(), SOURCE.CONSEQUENCE_OF_SOUND, 2021);
+  await runUploadServer(data.flat(), SOURCE.CONSEQUENCE_OF_SOUND, 2022);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 
