@@ -9,7 +9,7 @@ const { initialiseSpotify, getArtistByName, getTracks } = require("../spotify");
 
 const publicImage = (file) => path.join(__dirname, "../public/images/", file);
 
-const YEAR = 2021;
+const YEAR = 2022;
 
 function shuffle(array) {
   let currentIndex = array.length,
@@ -40,7 +40,7 @@ initialiseSpotify(true).then(async () => {
         positions: song.positions.filter((source) => source.year === YEAR),
       }))
       .filter((song) =>
-        song.positions.find((source) => source.source === SOURCE.TRIPLE_J)
+        song.positions.find((source) => source.source === SOURCE.PITCHFORK)
       )
   ).slice(0, 20);
 
@@ -52,7 +52,7 @@ initialiseSpotify(true).then(async () => {
         type: "text",
         time: 2,
         data: {
-          text: `New list:\n${NAMES[SOURCE.TRIPLE_J]}`,
+          text: `New list:\n${NAMES[SOURCE.PITCHFORK]}`,
           scale: 0.2,
         },
       },
