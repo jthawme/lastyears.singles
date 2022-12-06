@@ -7,6 +7,7 @@ const SOURCE = {
   THE_FADER: "the-fader",
   COMPLEX: "complex",
   TRIPLE_J: "triple-j",
+  GUARDIAN: "guardian",
   BIG_J_THE_WIZARD_KING: "big-j-the-wizard-king",
 };
 
@@ -19,6 +20,7 @@ const NAMES = {
   [SOURCE.THE_FADER]: "The Fader",
   [SOURCE.COMPLEX]: "Complex",
   [SOURCE.TRIPLE_J]: "Triple J",
+  [SOURCE.GUARDIAN]: "The Guardian",
   [SOURCE.BIG_J_THE_WIZARD_KING]: "Big J The Wizard King",
 };
 
