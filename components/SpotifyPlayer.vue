@@ -173,6 +173,9 @@ export default {
               window.location.reload();
             },
           },
+          callback(id) {
+            this.errorId = id;
+          },
         });
       }
     },
@@ -304,6 +307,10 @@ export default {
 
       clearTimeout(this.updateTimer);
 
+      if (this.errorId) {
+        this.$store.commit("toast/removeToast", this.errorId);
+      }
+
       try {
         const { is_playing, item, progress_ms, context } =
           await this.spotify.getMyCurrentPlaybackState();
@@ -377,6 +384,9 @@ export default {
         }
       } catch (e) {
         this.log("Get current error", e);
+
+        this.updateTimer = setTimeout(() => this.getCurrent(), 5000);
+
         return this.handleError(e, () => this.getCurrent());
       }
     },
