@@ -25,6 +25,8 @@
       <Lissajous v-if="isSource('consequence-of-sound')" />
       <World v-if="isSource('big-j-the-wizard-king')" />
       <Swell v-if="isSource('complex')" />
+      <Rings v-if="isSource('guardian')" />
+      <SpinOut v-if="isSource('crack')" />
     </transition>
 
     <MainBar />
@@ -74,6 +76,8 @@ export default {
     Lissajous: () => import("../components/Animations/Lissajous.vue"),
     World: () => import("../components/Animations/World.vue"),
     Swell: () => import("../components/Animations/Swell.vue"),
+    Rings: () => import("../components/Animations/Rings.vue"),
+    SpinOut: () => import("../components/Animations/SpinOut.vue"),
     BugCatch,
     IntroText,
   },
