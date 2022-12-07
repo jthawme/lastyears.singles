@@ -8,7 +8,7 @@ const { COLORS } = require("../constants");
 
 const publicImage = (file) => path.join(__dirname, "../public/images/", file);
 
-const YEAR = 2021;
+const YEAR = 2022;
 
 initialiseSpotify(true).then(async () => {
   const songs = await getSongs();

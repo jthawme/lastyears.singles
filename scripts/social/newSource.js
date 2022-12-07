@@ -40,7 +40,7 @@ initialiseSpotify(true).then(async () => {
         positions: song.positions.filter((source) => source.year === YEAR),
       }))
       .filter((song) =>
-        song.positions.find((source) => source.source === SOURCE.PITCHFORK)
+        song.positions.find((source) => source.source === SOURCE.GUARDIAN)
       )
   ).slice(0, 20);
 
@@ -52,7 +52,7 @@ initialiseSpotify(true).then(async () => {
         type: "text",
         time: 2,
         data: {
-          text: `New list:\n${NAMES[SOURCE.PITCHFORK]}`,
+          text: `New list:\n${NAMES[SOURCE.GUARDIAN]}`,
           scale: 0.2,
         },
       },

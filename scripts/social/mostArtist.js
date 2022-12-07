@@ -6,7 +6,7 @@ const { initialiseSpotify, getArtistByName } = require("../spotify");
 const { exec } = require("child_process");
 const { COLORS } = require("../constants");
 
-const YEAR = 2021;
+const YEAR = 2022;
 
 const clamp = (num, min, max) => {
   return Math.min(Math.max(num, min), max);
@@ -17,10 +17,12 @@ const mapRange = (value, x1, y1, x2, y2) =>
 
 initialiseSpotify(true).then(async () => {
   const songs = await getSongs();
-  const filtered = songs.map((song) => ({
-    ...song,
-    positions: song.positions.filter((source) => source.year === YEAR),
-  }));
+  const filtered = songs
+    .map((song) => ({
+      ...song,
+      positions: song.positions.filter((source) => source.year === YEAR),
+    }))
+    .filter((song) => song.positions.length > 0);
 
   const reduced = Object.entries(
     filtered.reduce((prev, curr) => {
