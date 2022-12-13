@@ -29,7 +29,7 @@
       <Rings v-else-if="isSource('guardian') && displayVisual" />
       <SpinOut v-else-if="isSource('crack') && displayVisual" />
       <!-- default visualiser -->
-      <Squares v-else-if="displayVisual" />
+      <Squares v-else-if="displayVisual && playing" />
     </transition>
 
     <MainBar />
