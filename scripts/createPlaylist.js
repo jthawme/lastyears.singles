@@ -10,6 +10,7 @@ const {
 const { NAMES, SOURCE } = require("./constants");
 const { getSongs, reduceSongStructure } = require("./db");
 const { makeImage } = require("./createPlaylistImage");
+const { getServerParam, promiseRunner } = require("./utils");
 
 const getPlaylistDetails = (source) => {
   const s = source.split("-");
@@ -39,7 +40,12 @@ const getInitialSongs = async () => {
   return reduceSongStructure(songs);
 };
 
-const createPlaylistIfNotExist = async (source, items, max) => {
+const createPlaylistIfNotExist = async (
+  source,
+  items,
+  max,
+  shouldUpdate = false
+) => {
   const { name, year } = getPlaylistDetails(source);
   const playlistName = getPlaylistName(source);
 
@@ -48,6 +54,10 @@ const createPlaylistIfNotExist = async (source, items, max) => {
   const image = await makeImage(name, max, year);
 
   if (existing) {
+    if (!shouldUpdate) {
+      return Promise.resolve(existing);
+    }
+
     return updatePlaylist(
       existing,
       items,
@@ -65,23 +75,32 @@ const createPlaylistIfNotExist = async (source, items, max) => {
 };
 
 (async () => {
+  const shouldUpdate = !!getServerParam("update", false);
+
   await initialiseSpotify(true);
   const songs = await getInitialSongs();
 
-  const playlists = await Promise.all(
-    Object.entries(songs).map(([source, items]) => {
-      items.sort((a, b) => b.positions - a.positions);
+  const playlists = [];
 
-      return createPlaylistIfNotExist(
-        source,
-        items.map((item) => item.spotify_id),
-        Math.max(...items.map((item) => item.positions))
-      ).then((playlist) => ({
-        playlist,
-        source,
-      }));
-    })
-  );
+  await promiseRunner(Object.entries(songs), async ([source, items]) => {
+    items.sort((a, b) => b.positions - a.positions);
+
+    const playlist = await createPlaylistIfNotExist(
+      source,
+      items.map((item) => item.spotify_id),
+      Math.max(...items.map((item) => item.positions)),
+      shouldUpdate
+    ).then((playlist) => ({
+      playlist,
+      source,
+    }));
+
+    playlists.push(playlist);
+  });
+
+  // const playlists = await Promise.all(
+  //   Object.entries(songs).map(
+  // );
 
   jsonfile.writeFileSync(
     path.join(__dirname, `../static/playlists.json`),
