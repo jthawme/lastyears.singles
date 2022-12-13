@@ -16,17 +16,20 @@
     </main>
 
     <transition name="fade" mode="out-in">
-      <Squares v-if="isSource('pitchfork') && displayVisual" />
       <Circles v-if="isSource('nme') && displayVisual" />
-      <Field v-if="isSource('the-fader') && displayVisual" />
-      <ShiftSquares v-if="isSource('billboard') && displayVisual" />
-      <Ticking v-if="isSource('npr') && displayVisual" />
-      <CircleWaves v-if="isSource('triple-j')" />
-      <Lissajous v-if="isSource('consequence-of-sound')" />
-      <World v-if="isSource('big-j-the-wizard-king')" />
-      <Swell v-if="isSource('complex')" />
-      <Rings v-if="isSource('guardian')" />
-      <SpinOut v-if="isSource('crack')" />
+      <Field v-else-if="isSource('the-fader') && displayVisual" />
+      <ShiftSquares v-else-if="isSource('billboard') && displayVisual" />
+      <Ticking v-else-if="isSource('npr') && displayVisual" />
+      <CircleWaves v-else-if="isSource('triple-j') && displayVisual" />
+      <Lissajous
+        v-else-if="isSource('consequence-of-sound') && displayVisual"
+      />
+      <World v-else-if="isSource('big-j-the-wizard-king') && displayVisual" />
+      <Swell v-else-if="isSource('complex') && displayVisual" />
+      <Rings v-else-if="isSource('guardian') && displayVisual" />
+      <SpinOut v-else-if="isSource('crack') && displayVisual" />
+      <!-- default visualiser -->
+      <Squares v-else-if="displayVisual" />
     </transition>
 
     <MainBar />

@@ -10,6 +10,7 @@ const SOURCE = {
   GUARDIAN: "guardian",
   CRACK: "crack",
   PASTE_MAGAZINE: "paste-magazine",
+  FAR_OUT: "far-out-magazine",
   BIG_J_THE_WIZARD_KING: "big-j-the-wizard-king",
 };
 
@@ -25,6 +26,7 @@ const NAMES = {
   [SOURCE.GUARDIAN]: "The Guardian",
   [SOURCE.CRACK]: "Crack",
   [SOURCE.PASTE_MAGAZINE]: "Paste Magazine",
+  [SOURCE.FAR_OUT]: "Far Out Magazine",
   [SOURCE.BIG_J_THE_WIZARD_KING]: "Big J The Wizard King",
 };
 
