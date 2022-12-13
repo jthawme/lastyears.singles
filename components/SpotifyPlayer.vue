@@ -164,6 +164,8 @@ export default {
       } else {
         this.log("Spotify error", e);
 
+        let _ = this;
+
         this.$store.commit("toast/addToast", {
           message: "There was an error with Spotify, refresh",
           action: {
@@ -174,7 +176,7 @@ export default {
             },
           },
           callback(id) {
-            this.errorId = id;
+            _.errorId = id;
           },
         });
       }
