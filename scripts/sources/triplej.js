@@ -5,7 +5,8 @@ const { runUpload, runUploadServer } = require("../upload");
 const { SOURCE } = require("../constants");
 
 // const targetUrl = "https://www.abc.net.au/triplej/hottest100/20/1-100";
-const targetUrl = "https://www.abc.net.au/triplej/hottest100/21/1-100";
+// const targetUrl = "https://www.abc.net.au/triplej/hottest100/21/1-100";
+const targetUrl = "https://www.abc.net.au/triplej/hottest100/22/1-100";
 
 const run = async () => {
   const code = await fetch(targetUrl).then((resp) => resp.text());
@@ -16,9 +17,9 @@ const run = async () => {
   $('ul[data-component="CountdownList"] li').each(function (idx, el) {
     // if ($(this).find("._2SEhp").length) {
     songs.push({
-      title: $(this).find("._12YfA").text(),
-      artist: $(this).find("._1nght div:last-child").text(),
-      position: parseInt($(this).find("._9tt3M").text().replace(/\D/g, "")),
+      title: $(this).find(".wbq-B").text(),
+      artist: $(this).find(".HNA0s div:last-child").text(),
+      position: parseInt($(this).find(".t8Ts-").text().replace(/\D/g, "")),
     });
     // } else if ($(this).find("._25a3Q").length) {
     //   songs.push({
