@@ -8,8 +8,10 @@ const { SOURCE } = require("../constants");
 //   "https://www.nme.com/features/nme-best-songs-of-the-year-2020-2833773";
 // const targetUrl =
 // "https://www.nme.com/features/music-features/nme-best-songs-of-the-year-2021-3112636";
+// const targetUrl =
+//   "https://www.nme.com/features/music-features/the-50-best-songs-of-2022-3358809";
 const targetUrl =
-  "https://www.nme.com/features/music-features/the-50-best-songs-of-2022-3358809";
+  "https://www.nme.com/features/music-features/best-songs-of-2023-3-3551141";
 
 const run = async () => {
   const code = await fetch(targetUrl).then((resp) => resp.text());
@@ -24,13 +26,14 @@ const run = async () => {
     const [artist, title] = afterText.split(" – ");
 
     songs.push({
-      title: title.trim(),
+      title: title.trim().slice(1, -1),
       artist: artist.trim(),
       position: position.trim(),
     });
   });
 
-  await runUploadServer(songs, SOURCE.NME, 2022);
+  // console.log(songs);
+  await runUploadServer(songs, SOURCE.NME, 2023);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 

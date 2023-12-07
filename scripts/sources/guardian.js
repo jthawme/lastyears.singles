@@ -4,8 +4,10 @@ const cheerio = require("cheerio");
 const { runUpload, runUploadServer } = require("../upload");
 const { SOURCE } = require("../constants");
 
+// const targetUrl =
+//   "https://www.theguardian.com/music/2022/dec/05/the-20-best-songs-of-2022";
 const targetUrl =
-  "https://www.theguardian.com/music/2022/dec/05/the-20-best-songs-of-2022";
+  "https://www.theguardian.com/music/2023/dec/04/the-20-best-songs-of-2023";
 
 const run = async () => {
   const code = await fetch(targetUrl).then((resp) => resp.text());
@@ -79,10 +81,9 @@ const run = async () => {
   //   });
   // });
 
-  // console.log(songs);
+  // console.log(merged);
 
-  await runUploadServer(merged, SOURCE.GUARDIAN, 2022);
-  // runUpload(songs, SOURCE.PITCHFORK);
+  await runUploadServer(merged, SOURCE.GUARDIAN, 2023);
 };
 
 run();
