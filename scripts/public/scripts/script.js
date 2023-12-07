@@ -126,17 +126,22 @@ const addSong = (item) => {
 async function getAll(nextSong) {
   const data = await fetch("/api/all").then((resp) => resp.json());
 
-  const songs = data.songs.slice().map((row) => {
-    const titleMatch = fuzzy(nextSong.title, row.title);
-    return {
-      ...row,
-      match: titleMatch,
-    };
-  });
+  const songs = data.songs
+    .slice()
+    .map((row) => {
+      const titleMatch = fuzzy(nextSong.title, row.title);
+      return {
+        ...row,
+        match: titleMatch,
+      };
+    })
+    .filter((item) => item.match > 0.8);
 
   songs.sort((a, b) => {
     return b.match - a.match;
   });
+
+  document.querySelector(".pool").innerHTML = "";
 
   songs.forEach((item) => {
     addSong(item);

@@ -5,7 +5,10 @@ const { runUpload, runUploadServer } = require("../upload");
 const { SOURCE } = require("../constants");
 
 // const targetUrl = "https://www.billboard.com/charts/year-end/2020/hot-100-songs/";
-const targetUrl = "https://www.billboard.com/charts/year-end/hot-100-songs/";
+// const targetUrl =
+//   "https://www.billboard.com/charts/year-end/2022/hot-100-songs/";
+const targetUrl =
+  "https://www.billboard.com/charts/year-end/2023/hot-100-songs/";
 
 const run = async () => {
   const code = await fetch(targetUrl).then((resp) => resp.text());
@@ -27,7 +30,9 @@ const run = async () => {
     });
   });
 
-  await runUploadServer(songs.reverse(), SOURCE.BILLBOARD, 2021);
+  // console.log(songs);
+
+  await runUploadServer(songs.reverse(), SOURCE.BILLBOARD, 2023);
   // runUpload(songs, SOURCE.PITCHFORK);
 };
 
