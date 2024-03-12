@@ -2,6 +2,15 @@ const SpotifyWebApi = require("spotify-web-api-node");
 const express = require("express");
 const open = require("open");
 
+// WARNING: This is not a drop in replacement solution and
+// it might not work for some edge cases. Test your code!
+const chunk = (arr, chunkSize = 1, cache = []) => {
+  const tmp = [...arr];
+  if (chunkSize <= 0) return cache;
+  while (tmp.length) cache.push(tmp.splice(0, chunkSize));
+  return cache;
+};
+
 const timer = (time = 2000, error = false) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -150,9 +159,10 @@ const createPlaylist = async (name, uris, description, image) => {
     const playlist = await spotify
       .createPlaylist(name, { description, collaborative: false, public: true })
       .then((data) => data.body);
+
     await spotify.addTracksToPlaylist(
       playlist.id,
-      uris.map((u) => `spotify:track:${u}`)
+      uris.slice(0, 100).map((u) => `spotify:track:${u}`)
     );
     await spotify.uploadCustomPlaylistCoverImage(playlist.id, image);
 
@@ -171,9 +181,10 @@ const updatePlaylist = async (playlist, uris, description, image) => {
     await spotify.changePlaylistDetails(playlist.id, {
       description,
     });
+
     await spotify.replaceTracksInPlaylist(
       playlist.id,
-      uris.map((u) => `spotify:track:${u}`)
+      uris.slice(0, 100).map((u) => `spotify:track:${u}`)
     );
     await spotify.uploadCustomPlaylistCoverImage(playlist.id, image);
 
